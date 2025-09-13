@@ -3,6 +3,7 @@ import {retryAsync} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
 
 export class PgListener {
+
     constructor(public cfg: IListenConfig) {
     }
 
@@ -28,19 +29,19 @@ export class PgListener {
             });
             con.client.on('notification', handler);
             await con.multi(pgp.helpers.concat(channels.map(a => ({
-                query: 'LISTEN $1:name',
+                query: `${this.sql.listen} $1:name`,
                 values: [a]
             }))));
             e?.onConnected?.(con, ++count);
         };
         await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryDefault);
         return {
-            async cancel(unlisten = false): Promise<boolean> {
+            cancel: async (unlisten = false): Promise<boolean> => {
                 if (con) {
                     con.client.removeListener('notification', handler);
                     if (unlisten) {
                         await con.multi(pgp.helpers.concat(channels.map(a => ({
-                            query: 'UNLISTEN $1:name',
+                            query: `${this.sql.unlisten} $1:name`,
                             values: [a]
                         }))));
                     }
@@ -53,4 +54,10 @@ export class PgListener {
         };
     }
 
+    private get sql(): { listen: string, unlisten: string } {
+        if (this.cfg.db.$config.options.capSQL) {
+            return {listen: 'LISTEN', unlisten: 'UNLISTEN'};
+        }
+        return {listen: 'listen', unlisten: 'unlisten'};
+    }
 }
