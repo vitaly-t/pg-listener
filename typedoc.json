@@ -13,7 +13,6 @@
   "customCss": "./typedoc.css",
   "readme": "none",
   "exclude": [
-    "./src/retry-async.ts",
     "./test/**/*.ts"
   ]
 }

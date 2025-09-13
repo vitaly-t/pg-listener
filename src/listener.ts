@@ -1,13 +1,13 @@
 import {IConnected} from 'pg-promise';
 import {retryAsync} from './retry-async';
-import {IListenConfig, IListenMessage, IListenOptions, IListenResult} from './types';
+import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
 
 export class PgListener {
     constructor(public cfg: IListenConfig) {
     }
 
-    async listen(channels: string[], opt?: IListenOptions): Promise<IListenResult> {
-        const handler = (m: IListenMessage) => opt?.onMessage({
+    async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
+        const handler = (m: IListenMessage) => e?.onMessage?.({
             channel: m.channel,
             payload: m.payload,
             processId: m.processId
@@ -18,11 +18,12 @@ export class PgListener {
         const reconnect = async () => {
             con = await db.connect({
                 direct: true,
-                onLost(err, ctx) {
+                onLost: (err, ctx) => {
                     con = null;
                     ctx.client.removeListener('notification', handler);
-                    opt?.onDisconnected?.(err, ctx);
-                    retryAsync(reconnect, opt).catch(err => opt?.onFailedReconnect?.(err));
+                    e?.onDisconnected?.(err, ctx);
+                    retryAsync(reconnect, this.cfg.retryDefault)
+                        .catch(err => e?.onFailedReconnect?.(err));
                 }
             });
             con.client.on('notification', handler);
@@ -30,9 +31,9 @@ export class PgListener {
                 query: 'LISTEN $1:name',
                 values: [a]
             }))));
-            opt?.onConnected?.(con, ++count);
+            e?.onConnected?.(con, ++count);
         };
-        await retryAsync(reconnect, opt);
+        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryDefault);
         return {
             async cancel(unlisten = false): Promise<boolean> {
                 if (con) {
