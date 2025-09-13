@@ -1,0 +1,18 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "pg-listener",
+  "out": "../pg-listener-docs",
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "cleanOutputDir": false,
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "entryPointStrategy": "resolve",
+  "hideGenerator": true,
+  "customCss": "./typedoc.css",
+  "readme": "none",
+  "exclude": [
+    "./test/**/*.ts"
+  ]
+}

@@ -1,15 +1,15 @@
 {
   "name": "pg-listener",
-  "version": "0.0.1",
-  "description": "Reliable notification listener for PostgreSQL.",
-  "main": "lib/index.js",
+  "version": "0.0.2",
+  "description": "Postgres notification listener for pg-promise",
+  "main": "src/index.js",
   "scripts": {
-    "test": "jasmine-node test",
-    "coverage": "istanbul cover ./node_modules/jasmine-node/bin/jasmine-node test",
-    "travis": "istanbul cover ./node_modules/jasmine-node/bin/jasmine-node test --captureExceptions && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "build": "tsc -p src",
+    "doc": "typedoc --tsconfig ./src/tsconfig.json",
+    "test": "jest"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "homepage": "https://github.com/vitaly-t/pg-listener",
   "repository": {
@@ -21,9 +21,10 @@
     "email": "vitaly.tomilov@gmail.com"
   },
   "keywords": [
-    "PostgreSQL",
-    "LISTEN",
-    "NOTIFY"
+    "postgres",
+    "notify",
+    "listen",
+    "pg-promise"
   ],
   "author": {
     "name": "Vitaly Tomilov",
@@ -31,12 +32,17 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.10",
-    "npm": ">=1.4"
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "pg-promise": ">=12.1.0"
   },
   "devDependencies": {
-    "coveralls": "2.x",
-    "istanbul": "0.4",
-    "jasmine-node": "1.x"
+    "@types/jest": "30.0.0",
+    "@types/node": "24.3.3",
+    "jest": "30.1.3",
+    "ts-jest": "29.4.1",
+    "typedoc": "0.28.12",
+    "typescript": "5.9.2"
   }
 }
