@@ -18,3 +18,4 @@ $ npm i pg-listener
 
 * TBD
 
+[pg-promise]:https://github.com/vitaly-t/pg-promise
