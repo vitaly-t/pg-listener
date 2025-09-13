@@ -57,4 +57,24 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
+Internally, the library makes use of [retry-async] to retry broken connections. You can set `RetryOptions` via properties
+[retryDefault] and [retryInitial] when creating the listener:
+
+```ts
+const ls = new PgListener({
+    pgp,
+    db,
+    retryDefault: {
+        delay: s => (s.index + 1) * 1000, // +1s delay for each retry
+        retry: 5 // retry up to 5 times
+    }
+});
+```
+
+Above, [retryDefault] is for both initial and later connection attempts, while [retryInitial] sets/overrides it specifically
+for the initial connection if you want it to be different.
+
 [pg-promise]:https://github.com/vitaly-t/pg-promise
+[retry-async]:https://github.com/vitaly-t/retry-async
+[retryDefault]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retrydefault
+[retryInitial]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryinitial
