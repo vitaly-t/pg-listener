@@ -4,7 +4,7 @@ pg-listener
 [![ci](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml/badge.svg)](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml)
 [![Node Version](https://img.shields.io/badge/nodejs-20%20--%2024-green.svg?logo=node.js&style=flat)](https://nodejs.org)
 
-Postgres notification listener for [pg-promise].
+Postgres notifications listener for [pg-promise].
 
 ## Installing
 
@@ -14,7 +14,7 @@ $ npm i pg-listener
 
 ## Usage
 
-This library uses [pg-promise] under the hood, as a peer dependency, which you need to install yourself.
+Peer dependency [pg-promise] is used underneath here, which you need to include in your project.
 
 ```ts
 import pgPromise from 'pg-promise';
@@ -57,7 +57,7 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
-Internally, the library makes use of [retry-async] to retry broken connections. You can set `RetryOptions` via properties
+Internally, the library makes use of [retry-async] to retry connections. You can set `RetryOptions` via properties
 [retryDefault] and [retryInitial] when creating the listener:
 
 ```ts
