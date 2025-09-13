@@ -1,8 +1,9 @@
 {
   "name": "pg-listener",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Postgres notification listener for pg-promise",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p src",
     "doc": "typedoc --tsconfig ./src/tsconfig.json",
