@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "name": "pg-listener",
+  "name": "pg-listener API",
   "out": "../pg-listener-docs",
   "excludeExternals": true,
   "excludePrivate": true,
@@ -13,6 +13,7 @@
   "customCss": "./typedoc.css",
   "readme": "none",
   "exclude": [
+    "./src/retry-async.ts",
     "./test/**/*.ts"
   ]
 }
