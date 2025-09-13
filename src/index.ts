@@ -1,2 +1,2 @@
-export {PgListener} from './listener';
-export {IListenConfig} from './types';
+export * from './listener';
+export * from './types';

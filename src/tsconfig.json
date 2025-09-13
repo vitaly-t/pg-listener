@@ -5,6 +5,7 @@
     "declaration": true,
     "declarationDir": "../dist",
     "outDir": "../dist",
+    "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true
   },
