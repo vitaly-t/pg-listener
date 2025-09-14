@@ -57,7 +57,7 @@ ls.listen(['channel_1', 'channel_2'], events)
         console.log('*** Initial Connection ***');
     })
     .catch(err => {
-        console.error('Initial Connection Failed:', err);
+        console.error('*** Initial Connection Failed:', err);
     });
 ```
 
