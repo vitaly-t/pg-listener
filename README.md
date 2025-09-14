@@ -34,13 +34,16 @@ const ls = new PgListener({pgp, db});
 
 const events: IListenEvents = {
     onMessage(msg) {
-        console.log(msg); // log messages from 2 channels
+        // Notification data has arrived
+        console.log(msg);
     },
     onConnected(con, count) {
+        // Connection Established: listening started
         console.log(`*** Connected: ${count} time(s) ***`);
     },
     onDisconnected(err, ctx) {
-        console.log('*** Lost Connection:', err.message);
+        // Connection Lost: need to reconnect
+        console.log('*** Disconnected:', err.message);
     },
     onFailedReconnect(err) {
         // Listening Terminated: cannot reconnect
