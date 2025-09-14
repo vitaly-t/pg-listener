@@ -52,6 +52,8 @@ export class PgListener {
      * It allocates and fully occupies one physical connection to the database,
      * thus allowing for the flexibility of choosing how to split channels across connections.
      *
+     * Once connected initially, the result is automatically registered withing the {@link connections} list.
+     *
      * If you want a channel just for sending notifications, pass in an empty list of channels.
      *
      * @param {string[]} channels - An array of channel names to listen to. It can be empty
