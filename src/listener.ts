@@ -1,7 +1,6 @@
 import {IConnected} from 'pg-promise';
 import {retryAsync, RetryOptions} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
-import {escapePayload} from './utils';
 
 /**
  * Default retry options, to be used when `retryMain` and `retryInitial` are not specified.

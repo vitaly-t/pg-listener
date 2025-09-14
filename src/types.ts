@@ -78,11 +78,11 @@ export interface IListenResult {
     /**
      * Sends a notification to the specified channels.
      *
-     * @param {string[]} channels - An array of channel identifiers where the notification should be sent.
-     * @param {any} [payload] - Optional payload data to include in the notification.
+     * @param {string[]} channels - An array of destination channels where the notification should be sent.
+     * @param {string} [payload] - Optional payload data to include in the notification.
      * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification operation.
      */
-    notify: (channels: string[], payload?: any) => Promise<boolean>;
+    notify: (channels: string[], payload?: string) => Promise<boolean>;
 }
 
 /**
