@@ -1,6 +1,6 @@
 import {IConnected} from 'pg-promise';
 import {retryAsync, RetryOptions} from './retry-async';
-import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
+import {IListenConfig, IListenMessage, IListenEvents, IListenResult, IListenConnection} from './types';
 
 /**
  * Default retry options, to be used when `retryMain` and `retryInitial` are not specified.
@@ -25,6 +25,19 @@ export class PgListener {
     constructor(public cfg: IListenConfig) {
     }
 
+    /**
+     * A list of all live connections, created by {@link listen} method.
+     *
+     * Connections that are no longer live are automatically removed from the list.
+     *
+     * Beware calling `result.cancel()` while iterating over it, because
+     * {@link IListenResult.cancel} removes the connection from this list.
+     * In most cases, {@link cancelAll} is a better choice.
+     *
+     * @see {@link cancelAll}
+     */
+    readonly connections: IListenConnection[] = [];
+
     private get sql(): { listen: string, unlisten: string, notify: string } {
         if (this.cfg.db.$config.options.capSQL) {
             return {listen: 'LISTEN', unlisten: 'UNLISTEN', notify: 'NOTIFY'};
@@ -33,8 +46,8 @@ export class PgListener {
     }
 
     /**
-     * Subscribes to specified database channels and listens for notifications.
-     * Handles automatic reconnection on lost connections.
+     * Initiates listening to specified channels for notifications,
+     * while automatically handling reconnection on lost connections.
      *
      * It allocates and fully occupies one physical connection to the database,
      * thus allowing for the flexibility of choosing how to split channels across connections.
@@ -53,7 +66,14 @@ export class PgListener {
         const {db, pgp} = this.cfg;
         const sql = this.sql;
         let count = 0;
-        let con: IConnected<{}, any> | null = null, live = true
+        let con: IConnected<{}, any> | null = null, live = true;
+        let result: IListenResult | null = null;
+        const removeResult = () => {
+            const idx = this.connections.findIndex(c => c.result === result);
+            if (idx >= 0) {
+                this.connections.splice(idx, 1);
+            }
+        }
         const reconnect = async () => {
             con = await db.connect({
                 direct: true,
@@ -64,6 +84,7 @@ export class PgListener {
                     retryAsync(reconnect, this.cfg.retryAll || retryDefault)
                         .catch(err => {
                             live = false;
+                            removeResult();
                             e?.onFailedReconnect?.(err);
                         });
                 }
@@ -76,7 +97,7 @@ export class PgListener {
             e?.onConnected?.(con, ++count);
         };
         await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
-        return {
+        result = {
             get isConnected(): boolean {
                 return !!con;
             },
@@ -94,6 +115,8 @@ export class PgListener {
                     }
                     con.done();
                     con = null;
+                    live = false;
+                    removeResult();
                     return true;
                 }
                 return false;
@@ -110,5 +133,19 @@ export class PgListener {
                 return false;
             }
         };
+        this.connections.push({created: new Date(), channels, result});
+        return result;
     }
+
+    /**
+     * Calls `result.cancel()` for each item inside {@link connections} list,
+     * and returns the number of successful cancellations.
+     *
+     * @param unlisten Parameter for each {@link IListenResult.cancel} call.
+     */
+    async cancelAll(unlisten = false): Promise<number> {
+        const res = await Promise.all(this.connections.map(c => c.result.cancel(unlisten)));
+        return res.reduce((a, b) => a + (b ? 1 : 0), 0);
+    }
+
 }

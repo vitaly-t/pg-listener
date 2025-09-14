@@ -66,7 +66,10 @@ export interface IListenResult {
 
     /**
      * Closes the connection allocated by {@link PgListener.listen} method,
-     * with optional `UNLISTEN` for all channels, and returns `true` if successful.
+     * with optional `UNLISTEN` request for all channels.
+     *
+     * If successful, it removes the connection from {@link PgListener.connections}
+     * list, and returns `true`.
      *
      * @param {boolean} [unlisten] - Optional flag indicating whether to
      *        also execute `UNLISTEN` for all channels.
@@ -135,4 +138,25 @@ export interface IListenEvents {
      * @param {any} err - The error object or information related to the failed reconnection attempt.
      */
     onFailedReconnect?: (err: any) => void;
+}
+
+/**
+ * Connection details, as created by {@link PgListener.listen} method.
+ */
+export interface IListenConnection {
+    /**
+     * Date/time when the connection was created.
+     */
+    created: Date;
+
+    /**
+     * A list of communication channels that were passed into {@link PgListener.listen} method
+     * to create this connection and listen to notifications on those channels.
+     */
+    channels: string[];
+
+    /**
+     * Return result from {@link PgListener.listen} method.
+     */
+    result: IListenResult;
 }
