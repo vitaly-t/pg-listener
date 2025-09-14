@@ -60,7 +60,7 @@ export interface IListenMessage {
 }
 
 /**
- * Result of the {@link listen} operation.
+ * Result from {@link PgListener.listen} method.
  */
 export interface IListenResult {
 
@@ -93,13 +93,13 @@ export interface IListenResult {
      * Checks if the listener is either connected or trying to connect/reconnect.
      *
      * When `false`, the listener has lost the connection permanently,
-     * and event {@link onFailedReconnect} has been triggered.
+     * and event {@link IListenEvents.onFailedReconnect onFailedReconnect} has been triggered.
      */
     isLive: boolean;
 }
 
 /**
- * Event handlers for the {@link listen} operation.
+ * Event handlers passed into {@link PgListener.listen} method.
  */
 export interface IListenEvents {
 

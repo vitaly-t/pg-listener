@@ -11,8 +11,8 @@ const retryDefault: RetryOptions = {
 };
 
 /**
- * The `PgListener` class provides functionality to listen to PostgreSQL NOTIFY/LISTEN events
- * and handle them dynamically using provided configuration and event handlers.
+ * Provides functionality to listen to Postgres `NOTIFY / LISTEN` events and handle them dynamically
+ * using provided configuration and event handlers.
  */
 export class PgListener {
 
