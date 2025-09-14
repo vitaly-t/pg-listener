@@ -21,7 +21,7 @@ module.exports = {
             'ts-jest',
             {
                 tsconfig: {
-                    target: 'ES2020',
+                    target: 'ES2022',
                     esModuleInterop: true
                 }
             }
