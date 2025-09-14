@@ -61,7 +61,7 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
-Internally, the library makes use of [retry-async] to retry connections. You can set `RetryOptions` via properties
+Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:
 
 ```ts
@@ -95,6 +95,8 @@ const retryDefault: RetryOptions = {
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
 [retry-async]:https://github.com/vitaly-t/retry-async
+
+[RetryOptions]:https://vitaly-t.github.io/pg-listener/types/RetryOptions.html
 
 [retryAll]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryall
 
