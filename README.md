@@ -43,11 +43,11 @@ const events: IListenEvents = {
     },
     onDisconnected(err, ctx) {
         // Connection Lost: need to reconnect
-        console.log('*** Disconnected:', err.message);
+        console.log('*** Disconnected:', err);
     },
     onFailedReconnect(err) {
         // Listening Terminated: cannot reconnect
-        console.error('*** Reconnect Failed:', err.message);
+        console.error('*** Reconnect Failed:', err);
     }
 };
 
@@ -56,8 +56,8 @@ ls.listen(['channel_1', 'channel_2'], events)
         // To stop listening, call result.cancel()
         console.log('*** Initial Connection ***');
     })
-    .catch(e => {
-        console.error('Initial Connection Failed:', e.message)
+    .catch(err => {
+        console.error('Initial Connection Failed:', err);
     });
 ```
 
