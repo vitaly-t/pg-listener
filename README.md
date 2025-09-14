@@ -53,6 +53,7 @@ const events: IListenEvents = {
 
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
+        // To stop listening, call result.cancel()
         console.log('*** Initial Connection ***');
     })
     .catch(e => {
