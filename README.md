@@ -40,7 +40,7 @@ const events: IListenEvents = {
         console.log(`*** Connected: ${count} time(s) ***`);
     },
     onDisconnected(err, ctx) {
-        console.log('*** Disconnected:', err.message);
+        console.log('*** Lost Connection:', err.message);
     },
     onFailedReconnect(err) {
         // Listening Terminated: cannot reconnect
@@ -62,8 +62,7 @@ Internally, the library makes use of [retry-async] to retry connections. You can
 
 ```ts
 const ls = new PgListener({
-    pgp,
-    db,
+    pgp, db,
     retryAll: {
         delay: s => (s.index + 1) * 1000, // +1s delay for each retry
         retry: 5 // retry up to 5 times
@@ -83,6 +82,12 @@ const retryDefault: RetryOptions = {
 };
 ```
 
+**TIP** ☝️
+
+> Database-connection options `keepAlive` / `keepAliveInitialDelayMillis` can be used with listeners to prevent the
+> connection from dying after not receiving any events for an extended period of time.
+<br/>Check [node-postgres] driver for details.
+
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
 [retry-async]:https://github.com/vitaly-t/retry-async
@@ -90,3 +95,5 @@ const retryDefault: RetryOptions = {
 [retryAll]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryall
 
 [retryInitial]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryinitial
+
+[node-postgres]:https://github.com/brianc/node-postgres
