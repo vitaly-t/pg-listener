@@ -57,7 +57,6 @@ export type RetryOptions<D = unknown> = {
 };
 
 /**
- * @ignore
  * Retries async operation returned from "func" callback, according to "options".
  */
 export function retryAsync<T, D>(func: RetryCB<Promise<T>, D>, options?: RetryOptions<D>): Promise<T> {

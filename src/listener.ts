@@ -25,6 +25,7 @@ export class PgListener {
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
         const handler = (m: IListenMessage) => e?.onMessage?.({
             channel: m.channel,
+            length: m.length,
             payload: m.payload,
             processId: m.processId
         });
