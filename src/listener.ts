@@ -53,6 +53,7 @@ export class PgListener {
      * thus allowing for the flexibility of choosing how to split channels across connections.
      *
      * @param {string[]} channels - An array of channel names to listen to.
+     * Pass in an empty list if you want a channel just for sending notifications.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.
      */
@@ -89,11 +90,13 @@ export class PgListener {
                         });
                 }
             });
-            con.client.on('notification', handler);
-            await con.multi(pgp.helpers.concat(channels.map(channel => ({
-                query: `${sql.listen} $(channel:alias)`,
-                values: {channel}
-            }))));
+            if (channels.length > 0) {
+                con.client.on('notification', handler);
+                await con.multi(pgp.helpers.concat(channels.map(channel => ({
+                    query: `${sql.listen} $(channel:alias)`,
+                    values: {channel}
+                }))));
+            }
             e?.onConnected?.(con, ++count);
         };
         await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
@@ -107,7 +110,7 @@ export class PgListener {
             async cancel(unlisten = false): Promise<boolean> {
                 if (con) {
                     con.client.removeListener('notification', handler);
-                    if (unlisten) {
+                    if (unlisten && channels.length > 0) {
                         await con.multi(pgp.helpers.concat(channels.map(channel => ({
                             query: `${sql.unlisten} $(channel:alias)`,
                             values: {channel}
@@ -122,7 +125,7 @@ export class PgListener {
                 return false;
             },
             async notify(channels: string[], payload?: string) {
-                if (con) {
+                if (con && channels.length > 0) {
                     payload ??= ''; // send empty payload for null/undefined
                     await con.multi(pgp.helpers.concat(channels.map(channel => ({
                         query: `${sql.notify} $(channel:alias), $(payload)`,

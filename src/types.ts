@@ -83,6 +83,7 @@ export interface IListenResult {
      * on the connection allocated by {@link PgListener.listen} method.
      *
      * @param {string[]} channels - An array of destination channels where the notification should be sent.
+     * If you pass in an empty list, the method will do nothing and just return `false`.
      * @param {string} [payload] - Optional payload data to include in the notification.
      * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification.
      */
