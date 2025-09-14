@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc -p src",
     "doc": "typedoc --tsconfig ./src/tsconfig.json",
+    "start": "tsc -p src && node dist/test.js",
     "test": "jest"
   },
   "files": [
