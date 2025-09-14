@@ -136,3 +136,24 @@ export interface IListenEvents {
      */
     onFailedReconnect?: (err: any) => void;
 }
+
+/**
+ * Connection details, as created by {@link PgListener.listen} method.
+ */
+export interface IListenConnection {
+    /**
+     * Date/time when the connection was created.
+     */
+    created: Date;
+
+    /**
+     * A list of communication channels that were passed into {@link PgListener.listen} method
+     * to create this connection and listen to notifications on those channels.
+     */
+    channels: string[];
+
+    /**
+     * Return result from {@link PgListener.listen} method.
+     */
+    result: IListenResult;
+}
