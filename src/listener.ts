@@ -38,7 +38,7 @@ export class PgListener {
                     con = null;
                     ctx.client.removeListener('notification', handler);
                     e?.onDisconnected?.(err, ctx);
-                    retryAsync(reconnect, this.cfg.retryMain || retryDefault)
+                    retryAsync(reconnect, this.cfg.retryAll || retryDefault)
                         .catch(err => e?.onFailedReconnect?.(err));
                 }
             });
@@ -49,7 +49,7 @@ export class PgListener {
             }))));
             e?.onConnected?.(con, ++count);
         };
-        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryMain || retryDefault);
+        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
         return {
             cancel: async (unlisten = false): Promise<boolean> => {
                 if (con) {

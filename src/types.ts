@@ -13,16 +13,16 @@ export interface IListenConfig {
     db: IDatabase<{}>;
 
     /**
-     * Main retry options, for all connection attempts.
+     * Retry options for all connection attempts. When not specified,
+     * internal `retryDefault` is used for re-connecting.
      *
      * Not used for initial connection if `retryInitial` is specified.
      */
-    retryMain?: RetryOptions;
+    retryAll?: RetryOptions;
 
     /**
-     * Retry options, for the initial connection only.
-     *
-     * When not specified, `retryMain` is used.
+     * Retry options, for the initial connection only. When not specified,
+     * `retryAll` is used, and if not set either - then `retryDefault`.
      */
     retryInitial?: RetryOptions;
 }
