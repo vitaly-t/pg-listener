@@ -1,10 +1,25 @@
 import {IConnected} from 'pg-promise';
-import {retryAsync} from './retry-async';
+import {retryAsync, RetryOptions} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
+
+/**
+ * Default retry options, to be used when `retryMain` and `retryInitial` are not specified.
+ */
+const retryDefault: RetryOptions = {
+    retry: 5, // up to 5 retries
+    delay: s => 5 ** (s.index + 1) // Exponential delays: 5, 25, 125, 625, 3125 ms
+};
 
 export class PgListener {
 
     constructor(public cfg: IListenConfig) {
+    }
+
+    private get sql(): { listen: string, unlisten: string } {
+        if (this.cfg.db.$config.options.capSQL) {
+            return {listen: 'LISTEN', unlisten: 'UNLISTEN'};
+        }
+        return {listen: 'listen', unlisten: 'unlisten'};
     }
 
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
@@ -23,7 +38,7 @@ export class PgListener {
                     con = null;
                     ctx.client.removeListener('notification', handler);
                     e?.onDisconnected?.(err, ctx);
-                    retryAsync(reconnect, this.cfg.retryDefault)
+                    retryAsync(reconnect, this.cfg.retryMain || retryDefault)
                         .catch(err => e?.onFailedReconnect?.(err));
                 }
             });
@@ -34,7 +49,7 @@ export class PgListener {
             }))));
             e?.onConnected?.(con, ++count);
         };
-        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryDefault);
+        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryMain || retryDefault);
         return {
             cancel: async (unlisten = false): Promise<boolean> => {
                 if (con) {
@@ -52,12 +67,5 @@ export class PgListener {
                 return false;
             }
         };
-    }
-
-    private get sql(): { listen: string, unlisten: string } {
-        if (this.cfg.db.$config.options.capSQL) {
-            return {listen: 'LISTEN', unlisten: 'UNLISTEN'};
-        }
-        return {listen: 'listen', unlisten: 'unlisten'};
     }
 }
