@@ -50,7 +50,7 @@ export class PgListener {
         const {db, pgp} = this.cfg;
         const sql = this.sql;
         let count = 0;
-        let con: IConnected<{}, any> | null = null;
+        let con: IConnected<{}, any> | null = null, live = true
         const reconnect = async () => {
             con = await db.connect({
                 direct: true,
@@ -59,7 +59,10 @@ export class PgListener {
                     ctx.client.removeListener('notification', handler);
                     e?.onDisconnected?.(err, ctx);
                     retryAsync(reconnect, this.cfg.retryAll || retryDefault)
-                        .catch(err => e?.onFailedReconnect?.(err));
+                        .catch(err => {
+                            live = false;
+                            e?.onFailedReconnect?.(err);
+                        });
                 }
             });
             con.client.on('notification', handler);
@@ -71,6 +74,12 @@ export class PgListener {
         };
         await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
         return {
+            get isConnected(): boolean {
+                return !!con;
+            },
+            get isLive(): boolean {
+                return live;
+            },
             async cancel(unlisten = false): Promise<boolean> {
                 if (con) {
                     con.client.removeListener('notification', handler);

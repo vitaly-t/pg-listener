@@ -53,7 +53,7 @@ const events: IListenEvents = {
 
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
-        // "result" has "cancel" + "notify" methods.
+        // result has: cancel|notify|isLive|isConnected
         console.log('*** Initial Connection ***');
     })
     .catch(err => {

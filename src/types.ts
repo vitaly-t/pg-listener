@@ -83,6 +83,19 @@ export interface IListenResult {
      * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification operation.
      */
     notify: (channels: string[], payload?: string) => Promise<boolean>;
+
+    /**
+     * Checks if the listener is currently connected.
+     */
+    isConnected: boolean;
+
+    /**
+     * Checks if the listener is either connected or trying to connect/reconnect.
+     *
+     * When `false`, the listener has lost the connection permanently,
+     * and event {@link onFailedReconnect} has been triggered.
+     */
+    isLive: boolean;
 }
 
 /**
