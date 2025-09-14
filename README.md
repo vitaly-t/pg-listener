@@ -5,7 +5,7 @@ pg-listener
 [![Node Version](https://img.shields.io/badge/nodejs-20%20--%2024-green.svg?logo=node.js&style=flat)](https://nodejs.org)
 
 Postgres notifications listener for [pg-promise], featuring:
- 
+
 * Automatic reconnections, with the help of [retry-async]
 * Multichannel support for `LISTEN` / `NOTIFY` on one connection
 * No external dependencies
@@ -67,6 +67,8 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
+See: [listen], [IListenResult]
+
 Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:
 
@@ -109,3 +111,7 @@ const retryDefault: RetryOptions = {
 [retryInitial]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryinitial
 
 [node-postgres]:https://github.com/brianc/node-postgres
+
+[listen]:https://vitaly-t.github.io/pg-listener/classes/PgListener.html#listen
+
+[IListenResult]:https://vitaly-t.github.io/pg-listener/interfaces/IListenResult.html
