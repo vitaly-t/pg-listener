@@ -36,6 +36,9 @@ export class PgListener {
      * Subscribes to specified database channels and listens for notifications.
      * Handles automatic reconnection on lost connections.
      *
+     * It allocates and fully occupies one physical connection to the database,
+     * thus allowing for the flexibility of choosing how to split channels across connections.
+     *
      * @param {string[]} channels - An array of channel names to listen to.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.

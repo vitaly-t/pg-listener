@@ -56,6 +56,7 @@ const events: IListenEvents = {
     }
 };
 
+// listen to 2 channels on one connection:
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
         // result = {cancel,notify,isLive,isConnected}

@@ -65,8 +65,8 @@ export interface IListenMessage {
 export interface IListenResult {
 
     /**
-     * Closes the connection, with optional `UNLISTEN` for all channels,
-     * and returns `true` if successful.
+     * Closes the connection allocated by {@link PgListener.listen} method,
+     * with optional `UNLISTEN` for all channels, and returns `true` if successful.
      *
      * @param {boolean} [unlisten] - Optional flag indicating whether to
      *        also execute `UNLISTEN` for all channels.
@@ -76,23 +76,26 @@ export interface IListenResult {
     cancel: (unlisten?: boolean) => Promise<boolean>;
 
     /**
-     * Sends a notification to the specified channels.
+     * Sends a notification to the list of specified channels,
+     * on the connection allocated by {@link PgListener.listen} method.
      *
      * @param {string[]} channels - An array of destination channels where the notification should be sent.
      * @param {string} [payload] - Optional payload data to include in the notification.
-     * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification operation.
+     * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification.
      */
     notify: (channels: string[], payload?: string) => Promise<boolean>;
 
     /**
-     * Checks if the listener is currently connected.
+     * Checks if we are currently connected, on the connection
+     * allocated by {@link PgListener.listen} method.
      */
     isConnected: boolean;
 
     /**
-     * Checks if the listener is either connected or trying to connect/reconnect.
+     * Checks if the connection allocated by {@link PgListener.listen}
+     * is currently connected or trying to connect/reconnect.
      *
-     * When `false`, the listener has lost the connection permanently,
+     * When `false`, the connection is lost permanently,
      * and event {@link IListenEvents.onFailedReconnect onFailedReconnect} has been triggered.
      */
     isLive: boolean;
