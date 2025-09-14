@@ -30,7 +30,7 @@ export class PgListener {
      *
      * Connections that are no longer live are automatically removed from the list.
      *
-     * Beware calling `result.cancel()` while iterating over it, because
+     * Beware of calling `result.cancel()` while iterating over it, because
      * {@link IListenResult.cancel} removes the connection from this list.
      * In most cases, {@link cancelAll} is a better choice.
      *
@@ -52,8 +52,10 @@ export class PgListener {
      * It allocates and fully occupies one physical connection to the database,
      * thus allowing for the flexibility of choosing how to split channels across connections.
      *
-     * @param {string[]} channels - An array of channel names to listen to.
-     * Pass in an empty list if you want a channel just for sending notifications.
+     * If you want a channel just for sending notifications, pass in an empty list of channels.
+     *
+     * @param {string[]} channels - An array of channel names to listen to. It can be empty
+     * if you want a channel just for sending notifications.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.
      */
