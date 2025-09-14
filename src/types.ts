@@ -63,7 +63,26 @@ export interface IListenMessage {
  * Result of the {@link listen} operation.
  */
 export interface IListenResult {
+
+    /**
+     * Closes the connection, with optional `UNLISTEN` for all channels,
+     * and returns `true` if successful.
+     *
+     * @param {boolean} [unlisten] - Optional flag indicating whether to
+     *        also execute `UNLISTEN` for all channels.
+     * @returns {Promise<boolean>} A promise that resolves to a boolean
+     *          indicating whether the cancellation was successful.
+     */
     cancel: (unlisten?: boolean) => Promise<boolean>;
+
+    /**
+     * Sends a notification to the specified channels.
+     *
+     * @param {string[]} channels - An array of channel identifiers where the notification should be sent.
+     * @param {any} [payload] - Optional payload data to include in the notification.
+     * @returns {Promise<boolean>} A promise that resolves to a boolean indicating the success of the notification operation.
+     */
+    notify: (channels: string[], payload?: any) => Promise<boolean>;
 }
 
 /**

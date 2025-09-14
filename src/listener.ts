@@ -1,6 +1,7 @@
 import {IConnected} from 'pg-promise';
 import {retryAsync, RetryOptions} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult} from './types';
+import {escapePayload} from './utils';
 
 /**
  * Default retry options, to be used when `retryMain` and `retryInitial` are not specified.
@@ -25,11 +26,11 @@ export class PgListener {
     constructor(public cfg: IListenConfig) {
     }
 
-    private get sql(): { listen: string, unlisten: string } {
+    private get sql(): { listen: string, unlisten: string, notify: string } {
         if (this.cfg.db.$config.options.capSQL) {
-            return {listen: 'LISTEN', unlisten: 'UNLISTEN'};
+            return {listen: 'LISTEN', unlisten: 'UNLISTEN', notify: 'NOTIFY'};
         }
-        return {listen: 'listen', unlisten: 'unlisten'};
+        return {listen: 'listen', unlisten: 'unlisten', notify: 'notify'};
     }
 
     /**
@@ -48,6 +49,7 @@ export class PgListener {
             processId: m.processId
         });
         const {db, pgp} = this.cfg;
+        const sql = this.sql;
         let count = 0;
         let con: IConnected<{}, any> | null = null;
         const reconnect = async () => {
@@ -62,25 +64,36 @@ export class PgListener {
                 }
             });
             con.client.on('notification', handler);
-            await con.multi(pgp.helpers.concat(channels.map(a => ({
-                query: `${this.sql.listen} $1:name`,
-                values: [a]
+            await con.multi(pgp.helpers.concat(channels.map(channel => ({
+                query: `${sql.listen} $(channel:alias)`,
+                values: {channel}
             }))));
             e?.onConnected?.(con, ++count);
         };
         await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
         return {
-            cancel: async (unlisten = false): Promise<boolean> => {
+            async cancel(unlisten = false): Promise<boolean> {
                 if (con) {
                     con.client.removeListener('notification', handler);
                     if (unlisten) {
-                        await con.multi(pgp.helpers.concat(channels.map(a => ({
-                            query: `${this.sql.unlisten} $1:name`,
-                            values: [a]
+                        await con.multi(pgp.helpers.concat(channels.map(channel => ({
+                            query: `${sql.unlisten} $(channel:alias)`,
+                            values: {channel}
                         }))));
                     }
                     con.done();
                     con = null;
+                    return true;
+                }
+                return false;
+            },
+            async notify(channels: string[], payload?: string) {
+                if (con) {
+                    payload ??= ''; // send empty payload for null/undefined
+                    await con.multi(pgp.helpers.concat(channels.map(channel => ({
+                        query: `${sql.notify} $(channel:alias), $(payload)`,
+                        values: {channel, payload}
+                    }))));
                     return true;
                 }
                 return false;
