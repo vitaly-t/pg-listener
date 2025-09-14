@@ -4,7 +4,11 @@ pg-listener
 [![ci](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml/badge.svg)](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml)
 [![Node Version](https://img.shields.io/badge/nodejs-20%20--%2024-green.svg?logo=node.js&style=flat)](https://nodejs.org)
 
-Postgres notifications listener for [pg-promise].
+Postgres notifications listener for [pg-promise], featuring:
+ 
+* Automatic reconnections, with the help of [retry-async]
+* Multichannel support for `LISTEN` / `NOTIFY` on one connection
+* No external dependencies
 
 ## Installing
 
@@ -34,7 +38,8 @@ const ls = new PgListener({pgp, db});
 
 const events: IListenEvents = {
     onMessage(msg) {
-        // Notification data has arrived
+        // Notification has arrived;
+        // msg = {channel,length,payload,processId}
         console.log(msg);
     },
     onConnected(con, count) {
@@ -53,7 +58,7 @@ const events: IListenEvents = {
 
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
-        // result has: cancel|notify|isLive|isConnected
+        // result = {cancel,notify,isLive,isConnected}
         console.log('*** Initial Connection ***');
     })
     .catch(err => {
