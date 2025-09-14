@@ -66,7 +66,10 @@ export interface IListenResult {
 
     /**
      * Closes the connection allocated by {@link PgListener.listen} method,
-     * with optional `UNLISTEN` for all channels, and returns `true` if successful.
+     * with optional `UNLISTEN` request for all channels.
+     *
+     * If successful, it removes the connection from {@link PgListener.connections}
+     * list, and returns `true`.
      *
      * @param {boolean} [unlisten] - Optional flag indicating whether to
      *        also execute `UNLISTEN` for all channels.

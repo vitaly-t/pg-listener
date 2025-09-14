@@ -29,6 +29,12 @@ export class PgListener {
      * A list of all live connections, created by {@link listen} method.
      *
      * Connections that are no longer live are automatically removed from the list.
+     *
+     * Beware calling `result.cancel()` while iterating over it, because
+     * {@link IListenResult.cancel} removes the connection from this list.
+     * In most cases, {@link cancelAll} is a better choice.
+     *
+     * @see {@link cancelAll}
      */
     readonly connections: IListenConnection[] = [];
 
@@ -40,8 +46,8 @@ export class PgListener {
     }
 
     /**
-     * Subscribes to specified database channels and listens for notifications.
-     * Handles automatic reconnection on lost connections.
+     * Initiates listening to specified channels for notifications,
+     * while automatically handling reconnection on lost connections.
      *
      * It allocates and fully occupies one physical connection to the database,
      * thus allowing for the flexibility of choosing how to split channels across connections.
@@ -130,4 +136,16 @@ export class PgListener {
         this.connections.push({created: new Date(), channels, result});
         return result;
     }
+
+    /**
+     * Calls `result.cancel()` for each item inside {@link connections} list,
+     * and returns the number of successful cancellations.
+     *
+     * @param unlisten Parameter for each {@link IListenResult.cancel} call.
+     */
+    async cancelAll(unlisten = false): Promise<number> {
+        const res = await Promise.all(this.connections.map(c => c.result.cancel(unlisten)));
+        return res.reduce((a, b) => a + (b ? 1 : 0), 0);
+    }
+
 }
