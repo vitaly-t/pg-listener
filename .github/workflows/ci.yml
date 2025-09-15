@@ -31,14 +31,6 @@ jobs:
             POSTGRES_IMAGE: postgres:14
             NODE_VERSION: 20
 
-          - name: PG-15 + Node-20
-            POSTGRES_IMAGE: postgres:15
-            NODE_VERSION: 20
-
-          - name: PG-16 + Node-20
-            POSTGRES_IMAGE: postgres:16
-            NODE_VERSION: 20
-
           - name: PG-17 + Node-24
             POSTGRES_IMAGE: postgres:17
             NODE_VERSION: 24

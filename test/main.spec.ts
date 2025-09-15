@@ -2,8 +2,6 @@ import {initDb} from './db';
 
 const {db} = initDb();
 
-console.log('PG:', db.$config.pgp.pg);
-
 describe('main', () => {
     it('can connect to the database', () => {
         expect(db.one('SELECT 123 as value')).resolves.toEqual({value: 123});
