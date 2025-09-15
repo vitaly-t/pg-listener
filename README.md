@@ -94,19 +94,16 @@ const retryDefault: RetryOptions = {
 };
 ```
 
-💡**TIPS** 💡
+## TIPS 💡
 
-<details>
-<summary><b>Keeping Live Connection</b></summary>
-<br/>
+### Keeping Live Connection
+
 Database-connection options `keepAlive` / `keepAliveInitialDelayMillis` can be used with listeners to prevent the
 connection from dying after not receiving any events for an extended period of time. Check [node-postgres] driver for
 details.
-</details>
 
-<details>
-<summary><b>NOTIFY Alternative</b></summary>
-<br/>
+### NOTIFY Alternative
+
 This library allows passing an empty list of channels into the [listen] method, to create and maintain a channel
 just for sending notifications. However, in real world, this is hardly ever needed, because it is only `LISTEN` that
 needs a robust connection channel, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
@@ -121,8 +118,6 @@ await db.none('NOTIFY $(channel:alias), $(payload)', {
 
 That's why [notify] here is inside the result from [listen] method, as a convenience for sending notifications
 through the same connection as we do the listening, and with a simpler syntax.
-
-</details>
 
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
