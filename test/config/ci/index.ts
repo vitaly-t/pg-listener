@@ -1,10 +1,12 @@
 import {config} from 'dotenv';
 import {initDb, createDbStructure} from '../../db';
 
-config({
+const cfg = config({
     path: './test/config/ci/.env',
     quiet: true
 });
+
+console.log('PARSED CFG:', cfg.parsed);
 
 (async function () {
     initDb();
