@@ -41,7 +41,7 @@ jobs:
       postgres:
         image: ${{ matrix.POSTGRES_IMAGE }}
         env:
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_DB: pg_listener_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: github_ci_pass_123
