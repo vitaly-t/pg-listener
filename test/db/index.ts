@@ -22,6 +22,5 @@ export function initDb() {
 export function createDbStructure() {
     const file = path.join(__dirname, 'create.sql');
     const create = new QueryFile(file, {minify: true});
-    console.log(create);
     return db.none(create);
 }
