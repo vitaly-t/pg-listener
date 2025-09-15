@@ -3,10 +3,23 @@ import {IListenEvents, PgListener} from '../src';
 
 const {pgp, db} = initDb();
 
-describe('main', () => {
+describe('listen', () => {
     it('can connect to the database', () => {
         expect(db.one('SELECT 123 as value')).resolves.toEqual({value: 123});
     });
+    it('can handle empty list of channels', async () => {
+        const a = new PgListener({pgp, db});
+        const e: IListenEvents = {
+            onConnected: (msg) => {
+            }
+        };
+        const onConnectedMock = jest.spyOn(e, 'onConnected');
+        const result = await a.listen([], e);
+        expect(onConnectedMock).toHaveBeenCalledTimes(1);
+        expect(onConnectedMock).toHaveBeenCalledWith(expect.any(Object), 1);
+        await result.cancel();
+    });
+
     it('can notify on one channel', async () => {
         const a = new PgListener({pgp, db});
         const e: IListenEvents = {
