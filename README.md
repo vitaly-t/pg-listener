@@ -98,7 +98,7 @@ const retryDefault: RetryOptions = {
 
 <details>
 <summary><b>Keeping Live Connection</b></summary>
-
+<br/>
 Database-connection options `keepAlive` / `keepAliveInitialDelayMillis` can be used with listeners to prevent the
 connection from dying after not receiving any events for an extended period of time. Check [node-postgres] driver for
 details.
@@ -106,7 +106,7 @@ details.
 
 <details>
 <summary><b>NOTIFY Alternative</b></summary>
-
+<br/>
 This library allows passing an empty list of channels into the [listen] method, to create and maintain a channel
 just for sending notifications. However, in real world, this is hardly ever needed, because it is only `LISTEN` that
 needs a robust connection channel, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
