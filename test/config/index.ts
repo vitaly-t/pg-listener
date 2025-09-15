@@ -1,6 +1,6 @@
 import {config} from 'dotenv';
 
 config({
-    path: './test/local.env',
+    path: './test/config/local.env',
     quiet: true
 });
