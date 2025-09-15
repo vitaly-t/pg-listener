@@ -141,7 +141,7 @@ export class PgListener {
                 return false;
             }
         };
-        this.connections.push({created: new Date(), channels, result});
+        this.connections.push({created: new Date(), channels: [...channels], result});
         return result;
     }
 
