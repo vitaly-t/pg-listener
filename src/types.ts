@@ -144,11 +144,11 @@ export interface IListenEvents {
 }
 
 /**
- * Connection details, as registered by {@link PgListener.listen} method.
+ * Connection details, as added by {@link PgListener.listen} method into {@link PgListener.connections} list.
  */
 export interface IListenConnection {
     /**
-     * Date/time when the connection was created.
+     * Date/time when the connection was added to {@link PgListener.connections} list.
      */
     created: Date;
 

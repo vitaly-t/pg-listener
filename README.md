@@ -60,10 +60,10 @@ const events: IListenEvents = {
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
         // result = {cancel,notify,isLive,isConnected}
-        console.log('*** Initial Connection ***');
+        console.log('*** Successful Initial Connection ***');
     })
     .catch(err => {
-        console.error('*** Initial Connection Failed:', err);
+        console.error('*** Failed Initial Connection:', err);
     });
 ```
 
