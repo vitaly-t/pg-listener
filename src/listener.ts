@@ -130,9 +130,10 @@ export class PgListener {
             },
             async notify(channels: string[], payload?: string) {
                 if (con && channels.length > 0) {
-                    payload ??= ''; // send empty payload for null/undefined
+                    payload ??= '';
+                    const p = payload.length ? ', $(payload)' : '';
                     await con.multi(pgp.helpers.concat(channels.map(channel => ({
-                        query: `${sql.notify} $(channel:alias), $(payload)`,
+                        query: `${sql.notify} $(channel:alias) ${p}`,
                         values: {channel, payload}
                     }))));
                     return true;
