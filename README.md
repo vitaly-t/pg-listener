@@ -104,10 +104,10 @@ details.
 
 ### NOTIFY Alternative
 
-This library allows passing an empty list of channels into the [listen] method, to create and maintain a channel
+This library allows passing an empty list of channels into the [listen] method, to create and maintain a connection
 just for sending notifications. However, in real world, this is hardly ever needed, because it is only `LISTEN` that
-needs a robust connection channel, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
-root object, without ever using this library:
+needs a robust connection, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
+root object, without using this library:
 
 ```ts
 await db.none('NOTIFY $(channel:alias), $(payload)', {
