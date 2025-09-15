@@ -3,10 +3,9 @@ module.exports = {
     collectCoverage: true,
     coverageThreshold: {
         global: {
-            /*
-            TODO: Uncomment once tests are present
-            branches: 95,
-            lines: 100,*/
+            // TODO: Later update to 95 and 100 respectively, when it all passes
+            branches: 50,
+            lines: 80
         }
     },
     roots: [
