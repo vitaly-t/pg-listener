@@ -7,12 +7,14 @@ import {RetryOptions} from './retry-async';
  */
 export interface IListenConfig {
     /**
-     * pg-promise initialized instance.
+     * {@link https://vitaly-t.github.io/pg-promise/module-pg-promise.html Initialized instance} from
+     * {@link https://github.com/vitaly-t/pg-promise pg-promise}.
      */
     pgp: IMain;
 
     /**
-     * pg-promise database instance.
+     * {@link https://vitaly-t.github.io/pg-promise/Database.html Database} instance from
+     * {@link https://github.com/vitaly-t/pg-promise pg-promise}.
      */
     db: IDatabase<{}>;
 
