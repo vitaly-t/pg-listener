@@ -99,8 +99,8 @@ const retryDefault: RetryOptions = {
 ### Keeping Live Connection
 
 Database-connection options `keepAlive` / `keepAliveInitialDelayMillis` can be used with listeners to prevent the
-connection from dying after not receiving any events for an extended period of time. Check [node-postgres] driver for
-details.
+connection from dying after not receiving any events for an extended period of time. This is particularly important
+with such hosting environments as AWS. Check [node-postgres] driver for details.
 
 ### NOTIFY Alternative
 
