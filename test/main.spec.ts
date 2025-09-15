@@ -3,10 +3,13 @@ import {IListenEvents, PgListener} from '../src';
 
 const {pgp, db} = initDb();
 
-describe('listen', () => {
-    it('can connect to the database', () => {
+describe('connectivity', () => {
+    it('must connect to the database', () => {
         expect(db.one('SELECT 123 as value')).resolves.toEqual({value: 123});
     });
+});
+
+describe('listen', () => {
     it('can handle empty list of channels', async () => {
         const ls = new PgListener({pgp, db});
         const e: IListenEvents = {
@@ -19,7 +22,6 @@ describe('listen', () => {
         expect(onConnectedMock).toHaveBeenCalledWith(expect.any(Object), 1);
         expect(result.isConnected).toBe(true);
         expect(result.isLive).toBe(true);
-
         expect(result.cancel()).resolves.toBe(true);
         expect(result.cancel()).resolves.toBe(false);
     });
@@ -40,7 +42,7 @@ describe('listen', () => {
             payload: '',
             processId: expect.any(Number)
         });
-        expect(ls.cancelAll(true)).resolves.toBe(1);
+        expect(ls.cancelAll()).resolves.toBe(1);
     });
     it('can notify on multiple channels', async () => {
         const ls = new PgListener({pgp, db});
@@ -64,7 +66,18 @@ describe('listen', () => {
             payload: 'hello',
             processId: expect.any(Number)
         });
-        await result.cancel();
+        expect(ls.cancelAll(true)).resolves.toBe(1);
+    });
+
+    it('can handle hacked list of connections', async () => {
+        // NOTE: This hacking is just for extra coverage!
+        const ls = new PgListener({pgp, db});
+        const result = await ls.listen([]);
+        expect(result.isConnected).toBe(true);
+        ls.connections.length = 0;
+        expect(result.cancel()).resolves.toBe(true);
+        ls.connections.push({created: new Date(), channels: [], result});
+        expect(ls.cancelAll()).resolves.toBe(0);
     });
 });
 

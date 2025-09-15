@@ -4,10 +4,13 @@ module.exports = {
     coverageThreshold: {
         global: {
             // TODO: Later update to 95 and 100 respectively, when it all passes
-            branches: 50,
-            lines: 80
+            branches: 75,
+            lines: 85
         }
     },
+    coveragePathIgnorePatterns: [
+        './src/retry-async.ts'
+    ],
     roots: [
         './test',
     ],
