@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////
 
 /**
- * Retry-status object type, for use with RetryCB.
+ * Retry-status object type, for use with `RetryCB`.
  */
 export type RetryStatus<D = unknown> = {
     /**
@@ -17,8 +17,8 @@ export type RetryStatus<D = unknown> = {
     readonly duration: number,
 
     /**
-     * Last error, if available;
-     * it is undefined only when "retryAsync" calls "func" with index = 0.
+     * The last error, if available;
+     * it is undefined only when `retryAsync` calls `func` with `index` = 0.
      */
     readonly error?: Error,
 
@@ -34,7 +34,7 @@ export type RetryStatus<D = unknown> = {
 export type RetryCB<T, D = unknown> = (s: RetryStatus<D>) => T;
 
 /**
- * Type for options passed into retryAsync function.
+ * Type for options passed into `retryAsync` function.
  */
 export type RetryOptions<D = unknown> = {
     /**
@@ -61,7 +61,7 @@ export type RetryOptions<D = unknown> = {
 };
 
 /**
- * Retries async operation returned from "func" callback, according to "options".
+ * Retries async operation returned from `func` callback, according to `options`.
  */
 export function retryAsync<T, D>(func: RetryCB<Promise<T>, D>, options?: RetryOptions<D>): Promise<T> {
     const start = Date.now();

@@ -54,10 +54,10 @@ export class PgListener {
      *
      * Once connected initially, the result is automatically registered withing the {@link connections} list.
      *
-     * If you want a channel just for sending notifications, pass in an empty list of channels.
+     * If you want a connection just for sending notifications, pass in an empty list of channels.
      *
      * @param {string[]} channels - An array of channel names to listen to. It can be empty
-     * if you want a channel just for sending notifications.
+     * if you want a connection just for sending notifications.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.
      */
