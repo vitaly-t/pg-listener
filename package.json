@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc -p src",
     "doc": "typedoc --tsconfig ./src/tsconfig.json",
-    "test": "jest --setupFiles ./test/config/index.ts",
-    "test:ci": "jest"
+    "test": "jest --setupFiles ./test/config/local/index.ts",
+    "test:ci": "jest --setupFiles ./test/config/ci/index.ts"
   },
   "files": [
     "dist"

@@ -1,3 +1,5 @@
+-- Creates the database structure
+
 CREATE TABLE IF NOT EXISTS table_1
 (
     id  SERIAL PRIMARY KEY,

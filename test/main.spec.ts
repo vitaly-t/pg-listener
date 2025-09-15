@@ -1,34 +1,6 @@
-// import {IListenEvents, PgListener} from '../src';
-import {db} from './db';
+import {initDb} from './db';
 
-/*
-const cfgMock: IListenConfig = {
-    pgp: {
-        helpers: {
-            concat: () => ''
-        }
-    } as any,
-    db: {
-        $config: {
-            options: {
-                capSQL: true
-            }
-        },
-        connect: () => ({
-            client: {
-                on: () => {
-                },
-                removeListener: () => {
-
-                }
-            },
-            multi: () => {
-            },
-            done: () => {
-            }
-        })
-    } as any
-};*/
+const {db} = initDb();
 
 describe('main', () => {
     it('can connect to the database', () => {
