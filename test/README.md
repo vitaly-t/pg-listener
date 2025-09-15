@@ -3,7 +3,7 @@ testing
 
 To run unit tests locally, you need to do the following first:
 
-* Make sure you have Postgres v10+ installed.
+* Make sure you have Postgres v14+ installed.
 * Create a test database (with any name you like).
 * Update [./config/local/.env](./config/local/.env) with the right connection details.
 
