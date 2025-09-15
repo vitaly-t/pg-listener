@@ -1,9 +1,44 @@
-// import {PgListener} from '../src';
+/*
+import {IListenConfig, IListenEvents, PgListener} from '../src';
+
+const cfgMock: IListenConfig = {
+    pgp: {
+        helpers: {
+            concat: () => ''
+        }
+    } as any,
+    db: {
+        $config: {
+            options: {
+                capSQL: true
+            }
+        },
+        connect: () => ({
+            client: {
+                on: () => {
+                },
+                removeListener: () => {
+
+                }
+            },
+            multi: () => {
+            },
+            done: () => {
+            }
+        })
+    } as any
+};
 
 describe('main', () => {
-    it('must do something', () => {
-        /*
-        const a = new PgListener({});
-        expect(a instanceof PgListener).toBeTruthy();*/
+    it('listen can connect', async () => {
+        const a = new PgListener(cfgMock);
+        const e: IListenEvents = {
+            onConnected: () => {
+            }
+        };
+        const res = await a.listen(['test'], e);
+        await res.notify(['test']);
+        expect(jest.fn(e.onConnected)).toHaveBeenCalledTimes(1);
     });
 });
+*/
