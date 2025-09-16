@@ -3,9 +3,8 @@ module.exports = {
     collectCoverage: true,
     coverageThreshold: {
         global: {
-            // TODO: Later update to 95 and 100 respectively, when it all passes
-            branches: 85,
-            lines: 80
+            branches: 95,
+            lines: 95
         }
     },
     coveragePathIgnorePatterns: [
