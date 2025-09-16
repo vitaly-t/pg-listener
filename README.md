@@ -68,7 +68,10 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
-See: [listen], [IListenResult]
+See also:
+
+* More [examples]
+* API: [listen] and [IListenResult]
 
 Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:
@@ -138,6 +141,10 @@ await db.none('NOTIFY $(channel:alias), $(payload)', {
 That's why [notify] here is inside the result from [listen] method, as a convenience for sending notifications
 through the same connection as we do the listening, and with a simpler syntax.
 
+### RxJs
+
+Check [examples] for a complete solution with RxJs.
+
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
 [retry-async]:https://github.com/vitaly-t/retry-async
@@ -155,3 +162,5 @@ through the same connection as we do the listening, and with a simpler syntax.
 [notify]:https://vitaly-t.github.io/pg-listener/interfaces/IListenResult.html#notify
 
 [IListenResult]:https://vitaly-t.github.io/pg-listener/interfaces/IListenResult.html
+
+[examples]:https://github.com/vitaly-t/pg-listener/wiki/Examples
