@@ -98,7 +98,7 @@ const retryDefault: RetryOptions = {
 ## Performance
 
 To measure the performance of notifications, I used a client that listens to a channel, then sends a notification on the
-same channel, which then arrives back from the server.
+same channel, which then arrives back from the local database server.
 
 In such a scenario the client was able to loop through about 12,000 notifications per second.
 
