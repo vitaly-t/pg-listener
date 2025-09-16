@@ -95,6 +95,21 @@ const retryDefault: RetryOptions = {
 };
 ```
 
+## Performance
+
+To measure the performance of notifications, I used a client that listens to a channel, then sends a notification on the
+same channel, which then arrives back from the server.
+
+In such a scenario the client was able to loop through about 12,000 notifications per second.
+
+Test environment:
+
+* Windows 11 Pro
+* Postgres v16
+* NodeJS v24
+* pg-listener v0.5.4
+* pg-promise v12.10.1
+
 ## TIPS 💡
 
 ### Keeping Live Connection
