@@ -102,7 +102,10 @@ same channel, which then arrives back from the server.
 
 In such a scenario the client was able to loop through about 12,000 notifications per second.
 
-Test environment:
+It is important to understand that this performance is entirely indicative of how fast the database can process the
+notifications. And it is quite irrelevant how fast this library or even Node.js can perform.
+
+**Test Environment:**
 
 * Windows 11 Pro
 * Postgres v16
