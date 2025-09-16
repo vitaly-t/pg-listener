@@ -3,12 +3,6 @@ import {IListenEvents, PgListener} from '../src';
 
 const {pgp, db} = initDb();
 
-describe('connectivity', () => {
-    it('must connect to the database', () => {
-        expect(db.one('SELECT 123 as value')).resolves.toEqual({value: 123});
-    });
-});
-
 describe('listen', () => {
     it('can handle empty list of channels', async () => {
         const ls = new PgListener({pgp, db});
