@@ -81,6 +81,20 @@ export interface IListenResult {
     cancel: (unlisten?: boolean) => Promise<boolean>;
 
     /**
+     * Adds a list of channels to listen to, and resolves with the number of
+     * channels successfully added (when the channels are not on the list yet),
+     * while ignoring the state of connection.
+     */
+    add: (channels: string[]) => Promise<number>;
+
+    /**
+     * Removes a list of channels from being listened to, and resolves with
+     * the number channels successfully removed (when channels are still on the list)
+     * while ignoring the state of connection.
+     */
+    remove: (channels: string[]) => Promise<number>;
+
+    /**
      * Sends a notification to the list of specified channels,
      * on the connection allocated by {@link PgListener.listen} method.
      *

@@ -128,6 +128,12 @@ export class PgListener {
                 }
                 return false;
             },
+            async add(channels: string[]): Promise<number> {
+                return 0;
+            },
+            async remove(channels: string[]): Promise<number> {
+                return 0;
+            },
             async notify(channels: string[], payload?: string) {
                 if (con && channels.length > 0) {
                     payload ??= '';
