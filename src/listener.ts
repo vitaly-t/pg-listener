@@ -95,8 +95,8 @@ export class PgListener {
                         });
                 }
             });
+            con.client.on('notification', handler);
             if (channelsCopy.length > 0) {
-                con.client.on('notification', handler);
                 await con.multi(pgp.helpers.concat(channelsCopy.map(channel => ({
                     query: `${sql.listen} $(channel:alias)`,
                     values: {channel}
@@ -129,7 +129,7 @@ export class PgListener {
                 }
                 return false;
             },
-            async add(channels: string[]): Promise<number> {
+            async add(channels: string[]): Promise<string[]> {
                 const list = channels.filter(c => channelsCopy.indexOf(c) < 0);
                 if (list.length) {
                     if (con) {
@@ -140,10 +140,22 @@ export class PgListener {
                     }
                     channelsCopy.push(...list);
                 }
-                return list.length;
+                return list;
             },
-            async remove(channels: string[]): Promise<number> {
-                return 0;
+            async remove(channels: string[], unlisten = false): Promise<string[]> {
+                const list = channels.filter(c => channelsCopy.indexOf(c) >= 0);
+                if (list.length) {
+                    if (con && unlisten) {
+                        await con.multi(pgp.helpers.concat(list.map(channel => ({
+                            query: `${sql.unlisten} $(channel:alias)`,
+                            values: {channel}
+                        }))));
+                    }
+                    for (const a of list) {
+                        channelsCopy.splice(channelsCopy.indexOf(a), 1);
+                    }
+                }
+                return list;
             },
             async notify(channels: string[], payload?: string) {
                 if (con && channels.length > 0) {

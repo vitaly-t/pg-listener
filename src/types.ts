@@ -81,18 +81,30 @@ export interface IListenResult {
     cancel: (unlisten?: boolean) => Promise<boolean>;
 
     /**
-     * Adds a list of channels to listen to, and resolves with the number of
-     * channels successfully added (when the channels are not on the list yet),
-     * while ignoring the state of connection.
+     * Adds a list of channels to listen to, and resolves with the list of channels
+     * actually added (not on the list yet), while ignoring the state of connection.
+     *
+     * @param {string[]} channels - List of channels to be added.
+     *
+     * @returns {Promise<string[]>} A promise that resolves to a list
+     *          of channels actually added.
      */
-    add: (channels: string[]) => Promise<number>;
+    add: (channels: string[]) => Promise<string[]>;
 
     /**
      * Removes a list of channels from being listened to, and resolves with
-     * the number channels successfully removed (when channels are still on the list)
+     * the list of channels actually removed (those still on the list),
      * while ignoring the state of connection.
+     *
+     * @param {string[]} channels - List of channels to stop listening to.
+     *
+     * @param {boolean} [unlisten] - Optional flag indicating whether to
+     *        also execute `UNLISTEN` for the removed channels.
+     *
+     * @returns {Promise<string[]>} A promise that resolves to a list
+     *          of channels actually removed.
      */
-    remove: (channels: string[]) => Promise<number>;
+    remove: (channels: string[], unlisten?: boolean) => Promise<string[]>;
 
     /**
      * Sends a notification to the list of specified channels,
