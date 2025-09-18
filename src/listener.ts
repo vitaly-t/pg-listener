@@ -80,6 +80,18 @@ export class PgListener {
                 this.connections.splice(idx, 1);
             }
         }
+        const listenTo = async (list: string[]) => {
+            await con?.multi(pgp.helpers.concat(list.map(channel => ({
+                query: `${sql.listen} $(channel:alias)`,
+                values: {channel}
+            }))));
+        };
+        const unlistenFrom = async (list: string[]) => {
+            await con?.multi(pgp.helpers.concat(list.map(channel => ({
+                query: `${sql.unlisten} $(channel:alias)`,
+                values: {channel}
+            }))));
+        };
         const reconnect = async () => {
             con = await db.connect({
                 direct: true,
@@ -97,10 +109,7 @@ export class PgListener {
             });
             con.client.on('notification', handler);
             if (channelsCopy.length > 0) {
-                await con.multi(pgp.helpers.concat(channelsCopy.map(channel => ({
-                    query: `${sql.listen} $(channel:alias)`,
-                    values: {channel}
-                }))));
+                await listenTo(channelsCopy);
             }
             e?.onConnected?.(con, ++count);
         };
@@ -116,10 +125,7 @@ export class PgListener {
                 if (con) {
                     con.client.removeListener('notification', handler);
                     if (unlisten && channelsCopy.length > 0) {
-                        await con.multi(pgp.helpers.concat(channelsCopy.map(channel => ({
-                            query: `${sql.unlisten} $(channel:alias)`,
-                            values: {channel}
-                        }))));
+                        await unlistenFrom(channelsCopy);
                     }
                     con.done();
                     con = null;
@@ -133,10 +139,7 @@ export class PgListener {
                 const list = channels.filter(c => channelsCopy.indexOf(c) < 0);
                 if (list.length) {
                     if (con) {
-                        await con.multi(pgp.helpers.concat(list.map(channel => ({
-                            query: `${sql.listen} $(channel:alias)`,
-                            values: {channel}
-                        }))));
+                        await listenTo(list);
                     }
                     channelsCopy.push(...list);
                 }
@@ -146,10 +149,7 @@ export class PgListener {
                 const list = channels.filter(c => channelsCopy.indexOf(c) >= 0);
                 if (list.length) {
                     if (con && unlisten) {
-                        await con.multi(pgp.helpers.concat(list.map(channel => ({
-                            query: `${sql.unlisten} $(channel:alias)`,
-                            values: {channel}
-                        }))));
+                        await unlistenFrom(list);
                     }
                     for (const a of list) {
                         channelsCopy.splice(channelsCopy.indexOf(a), 1);
