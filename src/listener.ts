@@ -81,13 +81,13 @@ export class PgListener {
             }
         }
         const listenTo = async (list: string[]) => {
-            await con?.multi(pgp.helpers.concat(list.map(channel => ({
+            await con?.multi?.(pgp.helpers.concat(list.map(channel => ({
                 query: `${sql.listen} $(channel:alias)`,
                 values: {channel}
             }))));
         };
         const unlistenFrom = async (list: string[]) => {
-            await con?.multi(pgp.helpers.concat(list.map(channel => ({
+            await con?.multi?.(pgp.helpers.concat(list.map(channel => ({
                 query: `${sql.unlisten} $(channel:alias)`,
                 values: {channel}
             }))));
@@ -138,19 +138,15 @@ export class PgListener {
             async add(channels: string[]): Promise<string[]> {
                 const list = channels.filter(c => channelsCopy.indexOf(c) < 0);
                 if (list.length) {
-                    if (con) {
-                        await listenTo(list);
-                    }
+                    await listenTo(list);
                     channelsCopy.push(...list);
                 }
                 return list;
             },
-            async remove(channels: string[], unlisten = false): Promise<string[]> {
+            async remove(channels: string[]): Promise<string[]> {
                 const list = channels.filter(c => channelsCopy.indexOf(c) >= 0);
                 if (list.length) {
-                    if (con && unlisten) {
-                        await unlistenFrom(list);
-                    }
+                    await unlistenFrom(list);
                     for (const a of list) {
                         channelsCopy.splice(channelsCopy.indexOf(a), 1);
                     }

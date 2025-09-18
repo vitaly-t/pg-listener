@@ -93,3 +93,51 @@ describe('notify', () => {
         expect(result.cancel()).resolves.toBe(true);
     });
 });
+
+describe('add', () => {
+    it('can trigger empty listener', async () => {
+        const ls = new PgListener({pgp, db});
+        const e: IListenEvents = {
+            onMessage: (msg) => {
+            }
+        };
+        const onMessageMock = jest.spyOn(e, 'onMessage');
+        const result = await ls.listen(['channel_1'], e);
+        expect(await result.add(['channel_1', 'channel_2'])).toStrictEqual(['channel_2']);
+        await result.notify(['channel_2'], 'hello');
+        expect(onMessageMock).toHaveBeenCalledTimes(1);
+        expect(onMessageMock).toHaveBeenCalledWith({
+            channel: 'channel_2',
+            length: 24,
+            payload: 'hello',
+            processId: expect.any(Number)
+        });
+    });
+    it('can handle an empty list', async () => {
+        const ls = new PgListener({pgp, db});
+        const result = await ls.listen([]);
+        expect(await result.add([])).toStrictEqual([]);
+    });
+});
+
+describe('remove', () => {
+    it('stops listening', async () => {
+        const ls = new PgListener({pgp, db});
+        const e: IListenEvents = {
+            onMessage: (msg) => {
+            }
+        };
+        const onMessageMock = jest.spyOn(e, 'onMessage');
+        const result = await ls.listen(['channel_1', 'channel_2'], e);
+        await result.notify(['channel_2'], 'hello');
+        expect(onMessageMock).toHaveBeenCalledTimes(1);
+        expect(await result.remove(['channel_2', 'bla'])).toStrictEqual(['channel_2']);
+        await result.notify(['channel_2'], 'hello');
+        expect(onMessageMock).toHaveBeenCalledTimes(1); // no new calls
+    });
+    it('can handle an empty list', async () => {
+        const ls = new PgListener({pgp, db});
+        const result = await ls.listen(['channel_1', 'channel_2']);
+        expect(await result.remove([])).toStrictEqual([]);
+    });
+});

@@ -98,13 +98,10 @@ export interface IListenResult {
      *
      * @param {string[]} channels - List of channels to stop listening to.
      *
-     * @param {boolean} [unlisten] - Optional flag indicating whether to
-     *        also execute `UNLISTEN` for the removed channels.
-     *
      * @returns {Promise<string[]>} A promise that resolves to a list
      *          of channels actually removed.
      */
-    remove: (channels: string[], unlisten?: boolean) => Promise<string[]>;
+    remove: (channels: string[]) => Promise<string[]>;
 
     /**
      * Sends a notification to the list of specified channels,
