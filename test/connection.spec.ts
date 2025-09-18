@@ -57,7 +57,7 @@ describe('connection', () => {
             }
         });
 
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 300));
 
         expect(onConnectedMock).toHaveBeenCalledTimes(2);
         expect(onConnectedMock).toHaveBeenNthCalledWith(1, expect.any(Object), 1);

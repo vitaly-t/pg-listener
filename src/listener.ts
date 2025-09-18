@@ -62,6 +62,7 @@ export class PgListener {
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.
      */
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
+        const channelsCopy = [...channels];
         const handler = (m: IListenMessage) => e?.onMessage?.({
             channel: m.channel,
             length: m.length,
@@ -79,6 +80,18 @@ export class PgListener {
                 this.connections.splice(idx, 1);
             }
         }
+        const listenTo = async (list: string[]) => {
+            await con?.multi?.(pgp.helpers.concat(list.map(channel => ({
+                query: `${sql.listen} $(channel:alias)`,
+                values: {channel}
+            }))));
+        };
+        const unlistenFrom = async (list: string[]) => {
+            await con?.multi?.(pgp.helpers.concat(list.map(channel => ({
+                query: `${sql.unlisten} $(channel:alias)`,
+                values: {channel}
+            }))));
+        };
         const reconnect = async () => {
             con = await db.connect({
                 direct: true,
@@ -94,12 +107,9 @@ export class PgListener {
                         });
                 }
             });
-            if (channels.length > 0) {
-                con.client.on('notification', handler);
-                await con.multi(pgp.helpers.concat(channels.map(channel => ({
-                    query: `${sql.listen} $(channel:alias)`,
-                    values: {channel}
-                }))));
+            con.client.on('notification', handler);
+            if (channelsCopy.length > 0) {
+                await listenTo(channelsCopy);
             }
             e?.onConnected?.(con, ++count);
         };
@@ -114,11 +124,8 @@ export class PgListener {
             async cancel(unlisten = false): Promise<boolean> {
                 if (con) {
                     con.client.removeListener('notification', handler);
-                    if (unlisten && channels.length > 0) {
-                        await con.multi(pgp.helpers.concat(channels.map(channel => ({
-                            query: `${sql.unlisten} $(channel:alias)`,
-                            values: {channel}
-                        }))));
+                    if (unlisten && channelsCopy.length > 0) {
+                        await unlistenFrom(channelsCopy);
                     }
                     con.done();
                     con = null;
@@ -127,6 +134,24 @@ export class PgListener {
                     return true;
                 }
                 return false;
+            },
+            async add(channels: string[]): Promise<string[]> {
+                const list = channels.filter(c => channelsCopy.indexOf(c) < 0);
+                if (list.length) {
+                    await listenTo(list);
+                    channelsCopy.push(...list);
+                }
+                return list;
+            },
+            async remove(channels: string[]): Promise<string[]> {
+                const list = channels.filter(c => channelsCopy.indexOf(c) >= 0);
+                if (list.length) {
+                    await unlistenFrom(list);
+                    for (const a of list) {
+                        channelsCopy.splice(channelsCopy.indexOf(a), 1);
+                    }
+                }
+                return list;
             },
             async notify(channels: string[], payload?: string) {
                 if (con && channels.length > 0) {
@@ -141,7 +166,7 @@ export class PgListener {
                 return false;
             }
         };
-        this.connections.push({created: new Date(), channels: [...channels], result});
+        this.connections.push({created: new Date(), channels: channelsCopy, result});
         return result;
     }
 
