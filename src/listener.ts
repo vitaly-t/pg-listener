@@ -60,6 +60,8 @@ export class PgListener {
      * if you want a connection just for sending notifications.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
      * @return {Promise<IListenResult>} A promise that resolves to an object containing a cancel method for stopping the listeners.
+     *
+     * @see {@link IListenResult.add}, {@link IListenResult.remove}
      */
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
         const channelsCopy = [...channels];

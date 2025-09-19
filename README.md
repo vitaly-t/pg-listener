@@ -71,7 +71,7 @@ ls.listen(['channel_1', 'channel_2'], events)
 See also:
 
 * More [examples]
-* API: [listen] and [IListenResult]
+* API: [listen] => [IListenResult]
 
 Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:
@@ -127,7 +127,7 @@ with such hosting environments as AWS. Check [node-postgres] driver for details.
 ### NOTIFY Alternative
 
 This library allows passing an empty list of channels into the [listen] method, to create and maintain a connection
-just for sending notifications. However, in real world, this is hardly ever needed, because it is only `LISTEN` that
+just for sending notifications. However, in the real world, this is hardly ever needed, because it is only `LISTEN` that
 needs a robust connection, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
 root object, without using this library:
 

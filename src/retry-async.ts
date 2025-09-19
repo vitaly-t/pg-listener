@@ -61,7 +61,8 @@ export type RetryOptions<D = unknown> = {
 };
 
 /**
- * Retries async operation returned from `func` callback, according to `options`.
+ * Retries async operation returned from `func` callback, according to `options`,
+ * as copied from {@link https://github.com/vitaly-t/retry-async retry-async}.
  */
 export function retryAsync<T, D>(func: RetryCB<Promise<T>, D>, options?: RetryOptions<D>): Promise<T> {
     const start = Date.now();

@@ -76,6 +76,8 @@ export interface IListenResult {
      *
      * @returns {Promise<string[]>} A promise that resolves to a list
      *          of channels actually added (not on the list yet).
+     *
+     * @see {@link remove}
      */
     add: (channels: string[]) => Promise<string[]>;
 
@@ -89,6 +91,8 @@ export interface IListenResult {
      *
      * @returns {Promise<string[]>} A promise that resolves to a list
      *          of channels actually removed (those still on the list).
+     *
+     * @see {@link add}
      */
     remove: (channels: string[]) => Promise<string[]>;
 

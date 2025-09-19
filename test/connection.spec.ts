@@ -85,14 +85,14 @@ describe('connection', () => {
 
         const result = await ls.listen([], e);
         failConnect = true;
+        await pause(100);
         onLostConnection(new Error('test'), {
             client: {
                 removeListener: () => {
                 }
             }
         });
-
-        await new Promise(r => setTimeout(r, 300));
+        await pause(100);
 
         expect(onConnectedMock).toHaveBeenCalledTimes(1);
         expect(onConnectedMock).toHaveBeenNthCalledWith(1, expect.any(Object), 1);
@@ -103,6 +103,5 @@ describe('connection', () => {
         expect(onFailedReconnectMock).toHaveBeenCalledTimes(1);
 
         await result.cancel();
-
     });
 });
