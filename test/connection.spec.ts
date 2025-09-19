@@ -4,6 +4,8 @@ import {IDatabase} from 'pg-promise';
 
 const {pgp, db} = initDb();
 
+const pause = (ms: number) => new Promise(r => setTimeout(r, ms));
+
 let onLostConnection = (err: Error, ctx: { client: { removeListener: () => void } }) => {
 };
 let failConnect = false;
@@ -49,15 +51,14 @@ describe('connection', () => {
         const onConnectedMock = jest.spyOn(e, 'onConnected');
         const onDisconnectedMock = jest.spyOn(e, 'onDisconnected');
         const result = await ls.listen([], e);
-
+        await pause(100);
         onLostConnection(new Error('test'), {
             client: {
                 removeListener: () => {
                 }
             }
         });
-
-        await new Promise(r => setTimeout(r, 300));
+        await pause(100);
 
         expect(onConnectedMock).toHaveBeenCalledTimes(2);
         expect(onConnectedMock).toHaveBeenNthCalledWith(1, expect.any(Object), 1);

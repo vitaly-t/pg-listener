@@ -36,7 +36,7 @@ describe('listen', () => {
             payload: '',
             processId: expect.any(Number)
         });
-        expect(ls.cancelAll()).resolves.toBe(1);
+        expect(await ls.cancelAll()).toBe(1);
     });
     it('can notify on multiple channels', async () => {
         const ls = new PgListener({pgp, db});
@@ -112,11 +112,13 @@ describe('add', () => {
             payload: 'hello',
             processId: expect.any(Number)
         });
+        expect(await result.cancel()).toBe(true);
     });
     it('can handle an empty list', async () => {
         const ls = new PgListener({pgp, db});
         const result = await ls.listen([]);
         expect(await result.add([])).toStrictEqual([]);
+        expect(await result.cancel()).toBe(true);
     });
 });
 
@@ -134,10 +136,12 @@ describe('remove', () => {
         expect(await result.remove(['channel_2', 'bla'])).toStrictEqual(['channel_2']);
         await result.notify(['channel_2'], 'hello');
         expect(onMessageMock).toHaveBeenCalledTimes(1); // no new calls
+        expect(await result.cancel()).toBe(true);
     });
     it('can handle an empty list', async () => {
         const ls = new PgListener({pgp, db});
         const result = await ls.listen(['channel_1', 'channel_2']);
         expect(await result.remove([])).toStrictEqual([]);
+        expect(await result.cancel()).toBe(true);
     });
 });
