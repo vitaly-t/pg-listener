@@ -67,6 +67,32 @@ export interface IListenMessage {
 export interface IListenResult {
 
     /**
+     * Adds a list of channels to listen to and executes `LISTEN` on those,
+     * if currently connected.
+     *
+     * It will ignore channels that are already on the list.
+     *
+     * @param {string[]} channels - List of channels to be added.
+     *
+     * @returns {Promise<string[]>} A promise that resolves to a list
+     *          of channels actually added (not on the list yet).
+     */
+    add: (channels: string[]) => Promise<string[]>;
+
+    /**
+     * Removes a list of channels from being listened to and executes `UNLISTEN` on those,
+     * if currently connected.
+     *
+     * It will ignore channels that are not on the list.
+     *
+     * @param {string[]} channels - List of channels to be removed.
+     *
+     * @returns {Promise<string[]>} A promise that resolves to a list
+     *          of channels actually removed (those still on the list).
+     */
+    remove: (channels: string[]) => Promise<string[]>;
+
+    /**
      * Closes the connection allocated by {@link PgListener.listen} method,
      * with optional `UNLISTEN` request for all channels.
      *
@@ -79,29 +105,6 @@ export interface IListenResult {
      *          indicating whether the cancellation was successful.
      */
     cancel: (unlisten?: boolean) => Promise<boolean>;
-
-    /**
-     * Adds a list of channels to listen to, and resolves with the list of channels
-     * actually added (not on the list yet), while ignoring the state of connection.
-     *
-     * @param {string[]} channels - List of channels to be added.
-     *
-     * @returns {Promise<string[]>} A promise that resolves to a list
-     *          of channels actually added.
-     */
-    add: (channels: string[]) => Promise<string[]>;
-
-    /**
-     * Removes a list of channels from being listened to, and resolves with
-     * the list of channels actually removed (those still on the list),
-     * while ignoring the state of connection.
-     *
-     * @param {string[]} channels - List of channels to stop listening to.
-     *
-     * @returns {Promise<string[]>} A promise that resolves to a list
-     *          of channels actually removed.
-     */
-    remove: (channels: string[]) => Promise<string[]>;
 
     /**
      * Sends a notification to the list of specified channels,
