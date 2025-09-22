@@ -40,13 +40,17 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE TRIGGER insert_trigger_1
+DROP TRIGGER IF EXISTS insert_trigger_1 ON table_1;
+
+CREATE TRIGGER insert_trigger_1
     AFTER INSERT
     ON table_1
     FOR EACH ROW
 EXECUTE FUNCTION trigger_func_1();
 
-CREATE OR REPLACE TRIGGER insert_trigger_2
+DROP TRIGGER IF EXISTS insert_trigger_2 ON table_2;
+
+CREATE TRIGGER insert_trigger_2
     AFTER INSERT
     ON table_2
     FOR EACH ROW

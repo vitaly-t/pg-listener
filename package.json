@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc -p src",
     "doc": "typedoc --tsconfig ./src/tsconfig.json",
-    "test": "jest --setupFiles ./test/config/local/index.ts",
-    "test:ci": "jest --setupFiles ./test/config/ci/index.ts"
+    "test": "jest --runInBand --setupFiles ./test/config/local/index.ts",
+    "test:ci": "jest --runInBand --setupFiles ./test/config/ci/index.ts"
   },
   "files": [
     "dist"
@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=16"
   },
   "peerDependencies": {
     "pg-promise": ">=12.1.0"

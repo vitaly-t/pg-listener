@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20.x, 24.x ]
+        node-version: [ 16.x, 24.x ]
 
     steps:
       - uses: actions/checkout@v3
@@ -27,10 +27,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: PG-14 + Node-20
-            POSTGRES_IMAGE: postgres:14
-            NODE_VERSION: 20
-
+          - name: PG-12 + Node-16
+            POSTGRES_IMAGE: postgres:12
+            NODE_VERSION: 16
           - name: PG-17 + Node-24
             POSTGRES_IMAGE: postgres:17
             NODE_VERSION: 24
