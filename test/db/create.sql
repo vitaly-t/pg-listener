@@ -2,6 +2,8 @@
 
 DROP TRIGGER IF EXISTS insert_trigger_1 ON table_1;
 DROP TRIGGER IF EXISTS insert_trigger_2 ON table_2;
+DROP FUNCTION IF EXISTS trigger_func_1;
+DROP FUNCTION IF EXISTS trigger_func_2;
 
 CREATE TABLE IF NOT EXISTS table_1
 (
@@ -15,7 +17,7 @@ CREATE TABLE IF NOT EXISTS table_2
     msg TEXT NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION trigger_func_1()
+CREATE FUNCTION trigger_func_1()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL
 AS
@@ -29,7 +31,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION trigger_func_2()
+CREATE FUNCTION trigger_func_2()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL
 AS
