@@ -3,7 +3,7 @@ pg-listener
 
 [![ci](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml/badge.svg)](https://github.com/vitaly-t/pg-listener/actions/workflows/ci.yml)
 [![Node Version](https://img.shields.io/badge/nodejs-16%20--%2024-green.svg?logo=node.js&style=flat)](https://nodejs.org)
-[![Postgres Version](https://img.shields.io/badge/postgresql-10%20--%2017-green.svg?logo=postgresql&style=flat)](https://www.postgresql.org)
+[![Postgres Version](https://img.shields.io/badge/postgresql-12%20--%2017-green.svg?logo=postgresql&style=flat)](https://www.postgresql.org)
 
 Postgres notifications listener for [pg-promise], featuring:
 
