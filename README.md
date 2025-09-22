@@ -126,7 +126,7 @@ with such hosting environments as AWS. Check [node-postgres] driver for details.
 
 ### NOTIFY Alternative
 
-This library allows passing an empty list of channels into the [listen] method, to create and maintain a connection
+This library allows passing an empty list of channels into the [listen] method to create and maintain a connection
 just for sending notifications. However, in the real world, this is hardly ever needed, because it is only `LISTEN` that
 needs a robust connection, while `NOTIFY` does not, i.e. you can send `NOTIFY` right from the database
 root object, without using this library:
@@ -139,11 +139,11 @@ await db.none('NOTIFY $(channel:alias), $(payload)', {
 ```
 
 That's why [notify] here is inside the result from [listen] method, as a convenience for sending notifications
-through the same connection as we do the listening, and with a simpler syntax.
+through the same connection as we do the listening, but with a simpler syntax.
 
 ### RxJs
 
-Check [examples] for a complete solution with RxJs.
+Check [examples] for a complete solution with [RxJs].
 
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
@@ -164,3 +164,5 @@ Check [examples] for a complete solution with RxJs.
 [IListenResult]:https://vitaly-t.github.io/pg-listener/interfaces/IListenResult.html
 
 [examples]:https://github.com/vitaly-t/pg-listener/wiki/Examples
+
+[RxJs]:https://github.com/ReactiveX/rxjs
