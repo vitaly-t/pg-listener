@@ -27,8 +27,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: PG-12 + Node-16
-            POSTGRES_IMAGE: postgres:12
+          - name: PG-10 + Node-16
+            POSTGRES_IMAGE: postgres:10
             NODE_VERSION: 16
           - name: PG-17 + Node-24
             POSTGRES_IMAGE: postgres:17
