@@ -122,17 +122,18 @@ export interface IListenResult {
     notify: (channels: string[], payload?: string) => Promise<boolean>;
 
     /**
-     * Checks if we are currently connected, on the connection
-     * allocated by {@link PgListener.listen} method.
+     * Checks if the connection object allocated by {@link PgListener.listen}
+     * is currently in the connected state.
      */
     isConnected: boolean;
 
     /**
-     * Checks if the connection allocated by {@link PgListener.listen}
-     * is currently connected or trying to connect/reconnect.
+     * Checks if the connection object allocated by {@link PgListener.listen}
+     * is currently in the connected state or trying to connect/reconnect,
+     * i.e. if the connection is still generally alive.
      *
-     * When `false`, the connection is lost permanently,
-     * and event {@link IListenEvents.onFailedReconnect onFailedReconnect} has been triggered.
+     * When `false`, the connection is lost permanently, and event
+     * {@link IListenEvents.onFailedReconnect onFailedReconnect} has been triggered.
      */
     isLive: boolean;
 }
@@ -143,21 +144,23 @@ export interface IListenResult {
 export interface IListenEvents {
 
     /**
-     * Notification message received from Postgres.
+     * A callback for receiving a notification from Postgres.
      */
     onMessage?: (msg: IListenMessage) => void;
 
     /**
-     * Connection established.
-     * @param con
-     * @param count
+     * A callback for when a new connection has been established.
+     *
+     * @param {IConnected<{}, any>} con - New `pg-promise` connection object.
+     * @param {number} count - Number of times the connection has been established.
      */
     onConnected?: (con: IConnected<{}, any>, count: number) => void;
 
     /**
-     * A callback function that is invoked when a disconnection event occurs.
+     * A callback function that is invoked when a disconnection event occurs
+     * i.e. when the connection has been lost temporarily.
      *
-     * @param {any} err - The error object or information related to the disconnection.
+     * @param {any} err - The error object pertaining to the disconnection issue.
      * @param {ILostContext} ctx - The context associated with the disconnection, providing additional details or state information.
      */
     onDisconnected?: (err: any, ctx: ILostContext) => void;
@@ -166,7 +169,8 @@ export interface IListenEvents {
      * A callback function that is invoked when a reconnection attempt fails.
      *
      * Receiving this event means that the connection has been lost permanently,
-     * and the library won't try to reconnect again.
+     * and the library won't try to auto-reconnect again, i.e. you would need to call
+     * {@link PgListener.listen} again for another connection attempt.
      *
      * @param {any} err - The error object or information related to the failed reconnection attempt.
      */
