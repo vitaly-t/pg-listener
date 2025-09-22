@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "peerDependencies": {
     "pg-promise": ">=12.1.0"
