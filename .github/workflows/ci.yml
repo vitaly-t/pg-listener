@@ -28,7 +28,7 @@ jobs:
       matrix:
         include:
           - name: PG-12 + Node-16
-            POSTGRES_IMAGE: postgres:10
+            POSTGRES_IMAGE: postgres:12
             NODE_VERSION: 16
           - name: PG-17 + Node-24
             POSTGRES_IMAGE: postgres:17
