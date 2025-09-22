@@ -70,8 +70,8 @@ ls.listen(['channel_1', 'channel_2'], events)
 
 See also:
 
-* More [examples]
 * API: [listen] => [IListenResult]
+* More [examples]
 
 Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:

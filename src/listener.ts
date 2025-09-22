@@ -3,7 +3,7 @@ import {retryAsync, RetryOptions} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult, IListenConnection} from './types';
 
 /**
- * Default retry options, to be used when `retryMain` and `retryInitial` are not specified.
+ * Default retry options, to be used when `retryAll` and `retryInitial` are not specified.
  */
 const retryDefault: RetryOptions = {
     retry: 5, // up to 5 retries
