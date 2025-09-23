@@ -17,10 +17,9 @@ const retryDefault: RetryOptions = {
 export class PgListener {
 
     /**
-     * Constructor for initializing the configuration object.
+     * Constructor for initializing the listener from a configuration object.
      *
-     * @param {IListenConfig} cfg - The configuration object used to initialize the instance.
-     * @return {void}
+     * @param {IListenConfig} cfg - Configuration object for initializing the instance.
      */
     constructor(public cfg: IListenConfig) {
     }
@@ -29,6 +28,8 @@ export class PgListener {
      * A list of all live connections, created by method {@link listen}.
      *
      * Connections that are no longer live are automatically removed from the list.
+     *
+     * This is mainly for the logging purpose / diagnostics.
      *
      * Beware of calling `result.cancel()` while iterating over it, because
      * {@link IListenResult.cancel} removes the connection from this list.

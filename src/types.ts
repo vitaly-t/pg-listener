@@ -23,12 +23,36 @@ export interface IListenConfig {
      * internal `retryDefault` is used for re-connecting.
      *
      * Not used for initial connection if `retryInitial` is specified.
+     *
+     * @example
+     * The example below will make the first reconnection attempt after 500ms,
+     * and all the following ones after 2s each, indefinitely.
+     *
+     * ```ts
+     * const cfg: IListenConfig = {
+     *     pgp, db,
+     *     retryAll: {
+     *         delay: s => s.index ? s.index * 2000 : 500
+     *     }
+     * };
+     * ```
      */
     retryAll?: RetryOptions;
 
     /**
      * Retry options, for the initial connection only. When not specified,
      * `retryAll` is used, and if not set either - then `retryDefault`.
+     *
+     * @example
+     * The example below will make all initial connection attempts repeat after 500ms,
+     * with up to 10 retries, and only then fail.
+     *
+     * ```ts
+     * const cfg: IListenConfig = {
+     *     pgp, db,
+     *     retryInitial: {retry: 10, delay: 500}
+     * };
+     * ```
      */
     retryInitial?: RetryOptions;
 }
@@ -139,17 +163,19 @@ export interface IListenResult {
 }
 
 /**
- * Event handlers passed into {@link PgListener.listen} method.
+ * Optional event handlers passed into {@link PgListener.listen} method.
  */
 export interface IListenEvents {
 
     /**
-     * A callback for receiving a notification from Postgres.
+     * A callback for receiving a notification message from Postgres.
      */
     onMessage?: (msg: IListenMessage) => void;
 
     /**
      * A callback for when a new connection has been established.
+     *
+     * This is mainly for logging purposes / diagnostics.
      *
      * @param {IConnected<{}, any>} con - New `pg-promise` connection object.
      * @param {number} count - Number of times the connection has been established.
@@ -159,6 +185,8 @@ export interface IListenEvents {
     /**
      * A callback function that is invoked when a disconnection event occurs
      * i.e. when the connection has been lost temporarily.
+     *
+     * This is mainly for logging purposes / diagnostics.
      *
      * @param {any} err - The error object pertaining to the disconnection issue.
      * @param {ILostContext} ctx - The context associated with the disconnection, providing additional details or state information.
@@ -170,7 +198,7 @@ export interface IListenEvents {
      *
      * Receiving this event means that the connection has been lost permanently,
      * and the library won't try to auto-reconnect again, i.e. you would need to call
-     * {@link PgListener.listen} again for another connection attempt.
+     * {@link PgListener.listen} again for another connection attempt, or just exit the application.
      *
      * @param {any} err - The error object or information related to the failed reconnection attempt.
      */
