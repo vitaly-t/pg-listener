@@ -111,6 +111,8 @@ export interface IListenResult {
      *
      * It will ignore channels that are not on the list.
      *
+     * If no more channels are left after the removal, the connection is NOT closed.
+     *
      * @param {string[]} channels - List of channels to be removed.
      *
      * @returns {Promise<string[]>} A promise that resolves to a list
@@ -215,7 +217,7 @@ export interface IListenConnection {
     created: Date;
 
     /**
-     * A list of communication channels that were passed into {@link PgListener.listen} method
+     * A list of channels that were passed into {@link PgListener.listen} method
      * to create this connection and listen to notifications on those channels.
      */
     channels: string[];
