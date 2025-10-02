@@ -31,7 +31,7 @@ export class PgListener {
      *
      * This is mainly for the logging purpose / diagnostics.
      *
-     * Beware of calling `result.cancel()` while iterating over it, because
+     * Beware of calling {@link IListenResult.cancel} while iterating over it, because
      * {@link IListenResult.cancel} removes the connection from this list.
      * In most cases, {@link cancelAll} is a better choice.
      *
@@ -40,18 +40,20 @@ export class PgListener {
     readonly connections: IListenConnection[] = [];
 
     private get sql(): { listen: string, unlisten: string, notify: string } {
-        if (this.cfg.db.$config.options.capSQL) {
-            return {listen: 'LISTEN', unlisten: 'UNLISTEN', notify: 'NOTIFY'};
-        }
-        return {listen: 'listen', unlisten: 'unlisten', notify: 'notify'};
+        const {capSQL} = this.cfg.db.$config.options;
+        return {
+            listen: capSQL ? 'LISTEN' : 'listen',
+            unlisten: capSQL ? 'UNLISTEN' : 'unlisten',
+            notify: capSQL ? 'NOTIFY' : 'notify'
+        };
     }
 
     /**
      * Initiates listening to specified channels for notifications,
      * while automatically handling reconnection on lost connections.
      *
-     * It allocates and fully occupies one physical connection to the database,
-     * thus allowing for the flexibility of choosing how to split channels across connections.
+     * It allocates and fully occupies one physical connection from the pool,
+     * allowing for the flexibility of choosing how to split channels across connections.
      *
      * Once connected initially, the result is automatically registered within {@link connections}.
      *
@@ -60,8 +62,8 @@ export class PgListener {
      * @param {string[]} channels - An array of channel names to listen to. It can be empty
      * if you want a connection just for sending notifications.
      * @param {IListenEvents} [e] - Optional event handlers for managing notifications, connection events, and errors.
-     * @return {Promise<IListenResult>} A promise that resolves to an object containing a `cancel` method for stopping
-     * the listeners (among other things).
+     *
+     * @returns {Promise<IListenResult>} A promise that resolves to an object with post-connect API.
      *
      * @see {@link IListenResult.add}, {@link IListenResult.remove}
      */
@@ -175,7 +177,7 @@ export class PgListener {
     }
 
     /**
-     * Calls `result.cancel()` for each item inside {@link connections},
+     * Calls {@link IListenResult.cancel} for each result item inside {@link connections},
      * and returns the number of successful cancellations.
      *
      * @param unlisten Parameter for each {@link IListenResult.cancel} call.
