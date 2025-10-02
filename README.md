@@ -143,7 +143,7 @@ through the same connection as we do the listening, but with a simpler syntax.
 
 ### RxJs
 
-Check [examples] for a complete solution with [RxJs].
+Check out [examples] for a complete solution with [RxJs].
 
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
