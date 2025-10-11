@@ -129,6 +129,8 @@ export interface IListenResult {
      * If successful, it removes the connection from {@link PgListener.connections}
      * list, and returns `true`.
      *
+     * It also ends all iterables created by {@link createIterable}.
+     *
      * @param {boolean} [unlisten] - Optional flag indicating whether to
      *        also execute `UNLISTEN` for all channels.
      * @returns {Promise<boolean>} A promise that resolves to a boolean
@@ -149,6 +151,9 @@ export interface IListenResult {
 
     /**
      * Creates an asynchronous iterable object to receive notification messages.
+     *
+     * The iteration is infinite, unless you explicitly call {@link cancel},
+     * or the connection is lost permanently.
      *
      * @example
      *

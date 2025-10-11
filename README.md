@@ -53,6 +53,16 @@ ls.listen(['channel_1', 'channel_2'], events)
     });
 ```
 
+Alternatively, you can process notifications via an iterable object:
+
+```ts
+const result = await ls.listen(['channel_1', 'channel_2']);
+
+for await (const msg of result.createIterable()) {
+    console.log(msg);
+}
+```
+
 See also:
 
 * API: [listen] => [IListenResult]
