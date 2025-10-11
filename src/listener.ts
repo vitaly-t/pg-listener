@@ -3,7 +3,7 @@ import {retryAsync, RetryOptions} from './retry-async';
 import {IListenConfig, IListenMessage, IListenEvents, IListenResult, IListenConnection} from './types';
 
 /**
- * Default retry options, to be used when `retryAll` and `retryInitial` are not specified.
+ * Default retry options, to be used when `retryAll` and `retryInit` are not specified.
  */
 const retryDefault: RetryOptions = {
     retry: 5, // up to 5 retries
@@ -119,7 +119,7 @@ export class PgListener {
             }
             e?.onConnected?.(con, ++count);
         };
-        await retryAsync(reconnect, this.cfg.retryInitial || this.cfg.retryAll || retryDefault);
+        await retryAsync(reconnect, this.cfg.retryInit || this.cfg.retryAll || retryDefault);
         result = {
             get isConnected(): boolean {
                 return !!con;

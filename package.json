@@ -1,6 +1,6 @@
 {
   "name": "pg-listener",
-  "version": "0.7.2",
+  "version": "1.0.0",
   "description": "Postgres notifications listener for pg-promise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,11 +41,11 @@
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
-    "@types/node": "24.7.1",
+    "@types/node": "24.7.2",
     "dotenv": "17.2.3",
     "jest": "30.2.0",
     "ts-jest": "29.4.5",
-    "typedoc": "0.28.13",
+    "typedoc": "0.28.14",
     "typescript": "5.9.3"
   }
 }

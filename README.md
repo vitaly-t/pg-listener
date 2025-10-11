@@ -59,7 +59,7 @@ See also:
 * More [examples]
 
 Internally, the library makes use of [retry-async] to retry connecting. You can set [RetryOptions] via properties
-[retryAll] and [retryInitial] when creating the listener:
+[retryAll] and [retryInit] when creating the listener:
 
 ```ts
 const ls = new PgListener({
@@ -71,7 +71,7 @@ const ls = new PgListener({
 });
 ```
 
-Above, [retryAll] is for both initial and later connection attempts, while [retryInitial] sets/overrides it
+Above, [retryAll] is for both initial and later connection attempts, while [retryInit] sets/overrides it
 specifically for the initial connection if you want it to be different. When those options are not specified, the
 library uses
 internal `retryDefault` that's defined like this:
@@ -138,7 +138,7 @@ Check out [examples] for a complete solution with [RxJs].
 
 [retryAll]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryall
 
-[retryInitial]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryinitial
+[retryInit]:https://vitaly-t.github.io/pg-listener/interfaces/IListenConfig.html#retryinit
 
 [node-postgres]:https://github.com/brianc/node-postgres
 

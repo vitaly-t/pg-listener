@@ -22,7 +22,7 @@ export interface IListenConfig {
      * Retry options for all connection attempts. When not specified,
      * internal `retryDefault` is used for re-connecting.
      *
-     * Not used for initial connection if `retryInitial` is specified.
+     * Not used for initial connection if `retryInit` is specified.
      *
      * @example
      * The example below will make the first reconnection attempt after 500ms,
@@ -50,11 +50,11 @@ export interface IListenConfig {
      * ```ts
      * const cfg: IListenConfig = {
      *     pgp, db,
-     *     retryInitial: {retry: 10, delay: 500}
+     *     retryInit: {retry: 10, delay: 500}
      * };
      * ```
      */
-    retryInitial?: RetryOptions;
+    retryInit?: RetryOptions;
 }
 
 /**
