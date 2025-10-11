@@ -69,7 +69,7 @@ export class PgListener {
      */
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
         const channelsCopy = [...channels];
-        const listeners: ((a: { value: IListenMessage | undefined, done: boolean }) => void)[] = [];
+        const listeners: ((a: { value: IListenMessage, done: boolean }) => void)[] = [];
         const handler = (m: IListenMessage) => {
             const value: IListenMessage = {
                 channel: m.channel,
@@ -84,7 +84,7 @@ export class PgListener {
         };
         const stopListeners = () => {
             while (listeners.length) {
-                listeners.shift()?.({value: undefined, done: true});
+                listeners.shift()?.({value: undefined as any, done: true});
             }
         };
         const {db, pgp} = this.cfg;
@@ -185,7 +185,7 @@ export class PgListener {
                 }
                 return false;
             },
-            createIterable(): AsyncIterable<IListenMessage | undefined> {
+            createIterable(): AsyncIterable<IListenMessage> {
                 return {
                     [Symbol.asyncIterator]() {
                         return {
