@@ -150,6 +150,9 @@ export interface IListenResult {
     /**
      * Creates an asynchronous iterable object to receive notification messages.
      *
+     * When the listener terminates, any such iterable will emit `undefined` as its last value,
+     * to let `for await` loops exit automatically.
+     *
      * @example
      *
      * ```ts
@@ -162,7 +165,7 @@ export interface IListenResult {
      *
      * @returns {AsyncIterable<IListenMessage>} An asynchronous iterable object.
      */
-    createIterable: () => AsyncIterable<IListenMessage>;
+    createIterable: () => AsyncIterable<IListenMessage | undefined>;
 
     /**
      * Checks if the connection object allocated by {@link PgListener.listen}

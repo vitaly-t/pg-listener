@@ -1,5 +1,5 @@
 import {initDb} from './db';
-import {IListenEvents, PgListener} from '../src';
+import {IListenEvents, IListenMessage, PgListener} from '../src';
 
 const {pgp, db} = initDb();
 
@@ -143,5 +143,32 @@ describe('remove', () => {
         const result = await ls.listen(['channel_1', 'channel_2']);
         expect(await result.remove([])).toStrictEqual([]);
         expect(await result.cancel()).toBe(true);
+    });
+});
+
+describe('createIterable', () => {
+    it('must stream messages', async () => {
+        const ls = new PgListener({pgp, db});
+        const result = await ls.listen(['channel_1']);
+        setTimeout(async () => {
+            await result.notify(['channel_1'], 'one');
+            await result.notify(['channel_1'], 'two');
+            await result.cancel();
+        });
+        const messages: Array<IListenMessage | undefined> = [];
+        for await (const msg of result.createIterable()) {
+            messages.push(msg);
+        }
+        expect(messages).toStrictEqual([{
+            channel: 'channel_1',
+            length: 22,
+            payload: 'one',
+            processId: expect.any(Number)
+        }, {
+            channel: 'channel_1',
+            length: 22,
+            payload: 'two',
+            processId: expect.any(Number)
+        }]);
     });
 });

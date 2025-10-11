@@ -69,7 +69,7 @@ export class PgListener {
      */
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
         const channelsCopy = [...channels];
-        const listeners: ((a: { value: IListenMessage }) => void)[] = [];
+        const listeners: ((a: { value: IListenMessage | undefined, done: boolean }) => void)[] = [];
         const handler = (m: IListenMessage) => {
             const value: IListenMessage = {
                 channel: m.channel,
@@ -79,7 +79,12 @@ export class PgListener {
             };
             e?.onMessage?.(value);
             while (listeners.length) {
-                listeners.shift()?.({value});
+                listeners.shift()?.({value, done: false});
+            }
+        };
+        const stopListeners = () => {
+            while (listeners.length) {
+                listeners.shift()?.({value: undefined, done: true});
             }
         };
         const {db, pgp} = this.cfg;
@@ -116,6 +121,7 @@ export class PgListener {
                         .catch(err => {
                             live = false;
                             removeResult();
+                            stopListeners();
                             e?.onFailedReconnect?.(err);
                         });
                 }
@@ -144,6 +150,7 @@ export class PgListener {
                     con = null;
                     live = false;
                     removeResult();
+                    stopListeners();
                     return true;
                 }
                 return false;
@@ -178,15 +185,13 @@ export class PgListener {
                 }
                 return false;
             },
-            createIterable(): AsyncIterable<IListenMessage> {
+            createIterable(): AsyncIterable<IListenMessage | undefined> {
                 return {
-                    [Symbol.asyncIterator](): AsyncIterator<IListenMessage> {
+                    [Symbol.asyncIterator]() {
                         return {
-                            next(): Promise<IteratorResult<IListenMessage>> {
-                                return new Promise(resolve => {
-                                    listeners.push(resolve);
-                                });
-                            }
+                            next: () =>
+                                new Promise(resolve =>
+                                    listeners.push(resolve))
                         };
                     }
                 };
