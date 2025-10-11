@@ -83,24 +83,6 @@ const retryDefault: RetryOptions = {
 };
 ```
 
-## Performance
-
-To measure the performance of notifications, I used a client that listens to a channel, then sends a notification on the
-same channel, which then arrives back from the local database server.
-
-In such a scenario the client was able to loop through about 12,000 notifications per second.
-
-It is important to understand that this performance is entirely indicative of how fast the database can process the
-notifications. And it is quite irrelevant how fast this library or even Node.js can perform.
-
-**Test Environment:**
-
-* Windows 11 Pro
-* Postgres v16
-* NodeJS v24
-* pg-listener v0.5.4
-* pg-promise v12.10.1
-
 ## TIPS 💡
 
 ### Keeping Live Connection
@@ -125,6 +107,10 @@ await db.none('NOTIFY $(channel:alias), $(payload)', {
 
 That's why [notify] here is inside the result from [listen] method, as a convenience for sending notifications
 through the same connection as we do the listening, but with a simpler syntax.
+
+## Performance
+
+Check out the [Performance Test] to see how fast PostgreSQL can loop through notifications.
 
 ### RxJs
 
@@ -151,3 +137,5 @@ Check out [examples] for a complete solution with [RxJs].
 [examples]:https://github.com/vitaly-t/pg-listener/wiki/Examples
 
 [RxJs]:https://github.com/ReactiveX/rxjs
+
+[Performance Test]:https://github.com/vitaly-t/pg-listener/wiki/Performance-Test
