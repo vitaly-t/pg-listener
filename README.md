@@ -8,7 +8,6 @@ pg-listener
 Postgres notifications listener for [pg-promise] (v10 or newer), featuring:
 
 * Automatic reconnections, with the help of [retry-async]
-* Multichannel support for `LISTEN` / `NOTIFY` on one connection
 * No external dependencies
 
 ## Installing
@@ -28,10 +27,9 @@ import {PgListener, IListenEvents} from 'pg-listener';
 const pgp = pgPromise();
 
 const db = pgp({
-    user: 'postgres',
-    password: '########',
-    database: 'postgres',
-    port: 5432,
+    user: 'user-name',
+    database: 'db-name',
+    // etc.
     keepAlive: true
 });
 
@@ -39,32 +37,19 @@ const ls = new PgListener({pgp, db});
 
 const events: IListenEvents = {
     onMessage(msg) {
-        // Notification has arrived;
-        // msg = {channel,length,payload,processId}
-        console.log(msg);
-    },
-    onConnected(con, count) {
-        // Connection Established: listening started
-        console.log(`*** Connected: ${count} time(s) ***`);
-    },
-    onDisconnected(err, ctx) {
-        // Connection Lost: need to reconnect
-        console.log('*** Disconnected:', err);
-    },
-    onFailedReconnect(err) {
-        // Listening Terminated: cannot reconnect
-        console.error('*** Reconnect Failed:', err);
+        console.log(msg); //=> {channel,length,payload,processId}
     }
+    // See also: onConnected, onDisconnected, onFailedReconnect
 };
 
 // listen to 2 channels on one connection:
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
         // result = {cancel,notify,add,remove,isLive,isConnected}
-        console.log('*** Successful Initial Connection ***');
+        console.log('Successful Initial Connection');
     })
     .catch(err => {
-        console.error('*** Failed Initial Connection:', err);
+        console.error('Failed Initial Connection:', err);
     });
 ```
 
@@ -73,7 +58,7 @@ See also:
 * API: [listen] => [IListenResult]
 * More [examples]
 
-Internally, the library makes use of [retry-async] to retry connections. You can set [RetryOptions] via properties
+Internally, the library makes use of [retry-async] to retry connecting. You can set [RetryOptions] via properties
 [retryAll] and [retryInitial] when creating the listener:
 
 ```ts
