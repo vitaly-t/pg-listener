@@ -148,6 +148,23 @@ export interface IListenResult {
     notify: (channels: string[], payload?: string) => Promise<boolean>;
 
     /**
+     * Creates an asynchronous iterable object to receive notification messages.
+     *
+     * @example
+     *
+     * ```ts
+     * const result = await ls.listen(['channel_1', 'channel_2']);
+     *
+     * for await (const msg of result.createIterable()) {
+     *     console.log(msg);
+     * }
+     * ```
+     *
+     * @returns {AsyncIterable<IListenMessage>} An asynchronous iterable object.
+     */
+    createIterable: () => AsyncIterable<IListenMessage>;
+
+    /**
      * Checks if the connection object allocated by {@link PgListener.listen}
      * is currently in the connected state.
      */

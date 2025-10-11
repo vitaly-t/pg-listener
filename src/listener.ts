@@ -69,12 +69,19 @@ export class PgListener {
      */
     async listen(channels: string[], e?: IListenEvents): Promise<IListenResult> {
         const channelsCopy = [...channels];
-        const handler = (m: IListenMessage) => e?.onMessage?.({
-            channel: m.channel,
-            length: m.length,
-            payload: m.payload,
-            processId: m.processId
-        });
+        const listeners: ((a: { value: IListenMessage }) => void)[] = [];
+        const handler = (m: IListenMessage) => {
+            const value: IListenMessage = {
+                channel: m.channel,
+                length: m.length,
+                payload: m.payload,
+                processId: m.processId
+            };
+            e?.onMessage?.(value);
+            while (listeners.length) {
+                listeners.shift()?.({value});
+            }
+        };
         const {db, pgp} = this.cfg;
         const sql = this.sql;
         let count = 0;
@@ -170,6 +177,19 @@ export class PgListener {
                     return true;
                 }
                 return false;
+            },
+            createIterable(): AsyncIterable<IListenMessage> {
+                return {
+                    [Symbol.asyncIterator](): AsyncIterator<IListenMessage> {
+                        return {
+                            next(): Promise<IteratorResult<IListenMessage>> {
+                                return new Promise(resolve => {
+                                    listeners.push(resolve);
+                                });
+                            }
+                        };
+                    }
+                };
             }
         };
         this.connections.push({created: new Date(), channels: channelsCopy, result});
