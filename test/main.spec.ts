@@ -146,7 +146,7 @@ describe('remove', () => {
     });
 });
 
-describe('createIterable', () => {
+describe.only('createIterable', () => {
     it('must stream messages', async () => {
         const ls = new PgListener({pgp, db});
         const result = await ls.listen(['channel_1']);
@@ -155,7 +155,7 @@ describe('createIterable', () => {
             await result.notify(['channel_1'], 'two');
             await result.cancel();
         });
-        const messages: Array<IListenMessage | undefined> = [];
+        const messages: Array<IListenMessage> = [];
         for await (const msg of result.createIterable()) {
             messages.push(msg);
         }
@@ -170,5 +170,32 @@ describe('createIterable', () => {
             payload: 'two',
             processId: expect.any(Number)
         }]);
+    });
+    it('must stream into all iterables', async () => {
+        const ls = new PgListener({pgp, db});
+        const result = await ls.listen(['channel_1']);
+        let msg1: IListenMessage | undefined = undefined, msg2: IListenMessage | undefined = undefined;
+        const i1 = result.createIterable()[Symbol.asyncIterator]();
+        i1.next().then(a => {
+            msg1 = a.value;
+        });
+        const i2 = result.createIterable()[Symbol.asyncIterator]();
+        i2.next().then(a => {
+            msg2 = a.value;
+        });
+        await result.notify(['channel_1'], 'hello');
+        await result.cancel();
+        expect(msg1).toStrictEqual({
+            channel: 'channel_1',
+            length: 24,
+            payload: 'hello',
+            processId: expect.any(Number)
+        });
+        expect(msg2).toStrictEqual({
+            channel: 'channel_1',
+            length: 24,
+            payload: 'hello',
+            processId: expect.any(Number)
+        });
     });
 });
