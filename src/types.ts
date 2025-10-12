@@ -155,6 +155,9 @@ export interface IListenResult {
      * The iteration is infinite, unless you explicitly call {@link cancel},
      * or the connection is lost permanently.
      *
+     * The iterable object never throws any error. Even if connection is lost permanently,
+     * it just will end the iteration, and that's it, same as when calling {@link cancel}.
+     *
      * @example
      *
      * ```ts
