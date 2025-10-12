@@ -124,7 +124,20 @@ Check out the [Performance Test] to see how fast PostgreSQL can loop through not
 
 ### RxJs
 
-Check out [examples] for a complete solution with [RxJs].
+Example of integration with [RxJs]:
+
+```ts
+import {from} from 'rxjs';
+
+const r = await ls.listen(['channel_1', 'channel_2']);
+
+from(r.createIterable())
+    .subscribe(msg => {
+        console.log(msg);
+    });
+```
+
+See also the [examples].
 
 [pg-promise]:https://github.com/vitaly-t/pg-promise
 
