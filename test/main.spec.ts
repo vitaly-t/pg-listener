@@ -146,7 +146,7 @@ describe('remove', () => {
     });
 });
 
-describe.only('createIterable', () => {
+describe('createIterable', () => {
     it('must stream messages', async () => {
         const ls = new PgListener({pgp, db});
         const result = await ls.listen(['channel_1']);
