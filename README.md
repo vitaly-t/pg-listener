@@ -46,7 +46,7 @@ const events: IListenEvents = {
 ls.listen(['channel_1', 'channel_2'], events)
     .then(result => {
         // Successful Initial Connection;
-        // result = {createIterable,cancel,notify,add,remove,isLive,isConnected}
+        // result = {createIterable, cancel, notify, etc.}
     })
     .catch(err => {
         // Failed Initial Connection
