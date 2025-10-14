@@ -9,3 +9,7 @@ li > code {
     border: 1px solid var(--color-accent);
     border-radius: 5px;
 }
+
+.tsd-page-navigation {
+    display: none;
+}
