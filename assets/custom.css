@@ -10,6 +10,8 @@ li > code {
     border-radius: 5px;
 }
 
+/*
+This hides the navigation bar on the right side of the page.
 .tsd-page-navigation {
     display: none;
-}
+}*/
