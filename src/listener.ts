@@ -50,7 +50,7 @@ export class PgListener {
 
     /**
      * Initiates listening to specified channels for notifications,
-     * while automatically handling reconnection on lost connections.
+     * while automatically handling reconnections.
      *
      * It allocates and fully occupies one physical connection from the pool,
      * allowing for the flexibility of choosing how to split channels across connections.
